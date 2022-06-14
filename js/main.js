@@ -1,10 +1,11 @@
 // Возврат случайного целого числа из диапазона
-const getRandomNumber = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return (min >= 0 && max >=0 && max >= min) ? Math.floor(Math.random() * (max - min + 1)) + min : -1;
+const getRandomPositiveInteger = (min, max) => {
+  const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
+  const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result) ;
 };
-getRandomNumber();
+getRandomPositiveInteger();
 
 // Проверка строки на максимальну длину
 const checkStringLength = (string, length) => string.length <= length;
