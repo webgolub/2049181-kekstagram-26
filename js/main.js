@@ -46,10 +46,10 @@ const getRandomPositiveInteger = (min, max) => {
   return Math.floor(result);
 };
 
-const getRandomArrayElement = (array) => array[getRandomPositiveInteger(0, array.length - 1)];
+const getRandomArrayElement = (items) => items[getRandomPositiveInteger(0, items.length - 1)];
 
-const checkStringLength = (string, length) => string.length <= length;
-checkStringLength('ass');
+const checkStringLength = (text, length) => text.length <= length;
+checkStringLength('some text', 5);
 
 const createComment = () => {
   commentId++;
@@ -71,5 +71,5 @@ const createPhoto = () => {
     comments: Array.from({length: getRandomPositiveInteger(1, 3)}, createComment),
   };
 };
-
-const createPhotos = Array.from({length: 25}, createPhoto);
+//Генерация массива с «фотками»
+Array.from({length: 25}, createPhoto);
