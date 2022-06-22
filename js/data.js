@@ -1,4 +1,4 @@
-import {getRandomPositiveInteger, getRandomPositiveIntegerNoRepeat, getRandomArrayElement} from './util.js';
+import {getRandomPositiveInteger, spawnGetRandomPositiveIntegerNoRepeat, getRandomArrayElement} from './random.js';
 
 const NAMES = [
   'Артём',
@@ -37,8 +37,14 @@ const DESCRIPTIONS = [
   'В отпуске.',
 ];
 
+//объект с данными о количестве комментариев
+const COMMENTS_QUANTITY = {
+  min: 1,
+  max: 10,
+};
+
 // Образование замыкания для функции получения случайного натурального числа из диапазона без повторов
-const getRandomNoRepeatId = getRandomPositiveIntegerNoRepeat(1, 255);
+const getRandomNoRepeatId = spawnGetRandomPositiveIntegerNoRepeat(1, 255);
 
 // Создание объекта комментария
 const createComment = () =>
@@ -55,12 +61,10 @@ const createPhoto = () => ({
   url: `photos/${getRandomNoRepeatId()}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomPositiveInteger(15, 200),
-  comments: Array.from({length: getRandomPositiveInteger(1, 3)}, createComment),
+  comments: Array.from({length: getRandomPositiveInteger(COMMENTS_QUANTITY.min, COMMENTS_QUANTITY.max)}, createComment),
 });
 
-//Генерация массива постов с фотографиями
-const createPhotos = () => Array.from({length: 25}, createPhoto);
-const somePhotos = createPhotos();
+//Функция генерации массива постов с фотографиями
+const createPhotos = (quantity) => Array.from({length: quantity}, createPhoto);
 
-
-export {somePhotos};
+export {createPhotos};
