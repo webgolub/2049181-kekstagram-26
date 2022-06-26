@@ -12,7 +12,8 @@ const spawnGetRandomPositiveIntegerNoRepeat = (min, max) => {
   return function ()  {
     let currentValue = getRandomPositiveInteger(min, max);
     if (usedValues.length >= (max - min + 1)) {
-      usedValues.length = 0;
+      //usedValues.length = 0;
+      return undefined;
     }
     while (usedValues.includes(currentValue)){
       currentValue = getRandomPositiveInteger(min, max);

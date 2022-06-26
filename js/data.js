@@ -44,7 +44,8 @@ const COMMENTS_QUANTITY = {
 };
 
 // Образование замыкания для функции получения случайного натурального числа из диапазона без повторов
-const getRandomNoRepeatId = spawnGetRandomPositiveIntegerNoRepeat(1, 255);
+const getRandomNoRepeatId = spawnGetRandomPositiveIntegerNoRepeat(1, 25);
+const getRandomNoRepeatUrl = spawnGetRandomPositiveIntegerNoRepeat(1, 25);
 
 // Создание объекта комментария
 const createComment = () =>
@@ -58,7 +59,7 @@ const createComment = () =>
 // Создание объекта поста с фотографией
 const createPhoto = () => ({
   id: getRandomNoRepeatId(),
-  url: `photos/${getRandomNoRepeatId()}.jpg`,
+  url: `photos/${getRandomNoRepeatUrl()}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomPositiveInteger(15, 200),
   comments: Array.from({length: getRandomPositiveInteger(COMMENTS_QUANTITY.min, COMMENTS_QUANTITY.max)}, createComment),
