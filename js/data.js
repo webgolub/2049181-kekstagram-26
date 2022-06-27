@@ -37,17 +37,17 @@ const DESCRIPTIONS = [
   'В отпуске.',
 ];
 
-//объект с данными о количестве комментариев
-const COMMENTS_QUANTITY = {
-  min: 1,
-  max: 10,
+// Объект с данными о количестве комментариев
+const CommentsQuantity = {
+  MIN: 1,
+  MAX: 10,
 };
 
 // Образование замыкания для функции получения случайного натурального числа из диапазона без повторов
 const getRandomNoRepeatId = spawnGetRandomPositiveIntegerNoRepeat(1, 25);
 const getRandomNoRepeatUrl = spawnGetRandomPositiveIntegerNoRepeat(1, 25);
 
-// Создание объекта комментария
+// Функция создания объекта комментария
 const createComment = () =>
   ({
     id: getRandomNoRepeatId(),
@@ -56,16 +56,16 @@ const createComment = () =>
     name: getRandomArrayElement(NAMES),
   });
 
-// Создание объекта поста с фотографией
+// Функция создания объекта поста с фотографией
 const createPhoto = () => ({
   id: getRandomNoRepeatId(),
   url: `photos/${getRandomNoRepeatUrl()}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomPositiveInteger(15, 200),
-  comments: Array.from({length: getRandomPositiveInteger(COMMENTS_QUANTITY.min, COMMENTS_QUANTITY.max)}, createComment),
+  comments: Array.from({length: getRandomPositiveInteger(CommentsQuantity.MIN, CommentsQuantity.MAX)}, createComment),
 });
 
-//Функция генерации массива постов с фотографиями
+// Функция генерации массива постов с фотографиями
 const createPhotos = (quantity) => Array.from({length: quantity}, createPhoto);
 
 export {createPhotos};
