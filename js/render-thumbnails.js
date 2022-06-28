@@ -8,9 +8,8 @@ const thumbnailsContainer = document.querySelector('.pictures');
 
 // Функция для отрисовки миниатюр на основе массива объектов
 const renderThumbnails = (thumbnails) => {
-  const thumbnailsContainerFragment = document.createDocumentFragment();
 
-
+  const thumbnailElements = [];
   thumbnails.forEach(({url, comments, likes, description}) => {
     const element = thumbnailTemplate.cloneNode(true);
     const thumbnailClickHandler = renderFullsizeViewer({url, comments, likes, description});
@@ -18,10 +17,10 @@ const renderThumbnails = (thumbnails) => {
     element.querySelector('.picture__comments').textContent = comments.length;
     element.querySelector('.picture__likes').textContent = likes;
     element.addEventListener('click', thumbnailClickHandler);
-    thumbnailsContainerFragment.appendChild(element);
+    thumbnailElements.push(element);
   });
 
-  thumbnailsContainer.appendChild(thumbnailsContainerFragment);
+  thumbnailsContainer.append(...thumbnailElements);
 };
 
 export {renderThumbnails};
