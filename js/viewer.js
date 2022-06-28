@@ -18,15 +18,15 @@ const closeBigPictureClickHandler = () => {
   document.removeEventListener ('keydown', closeBigPictureEscHandler);
 };
 
-const renderComments = (elements) => {
+const renderComments = (items) => {
 
   const elementsArray = [];
   commentsContainer.textContent = '';
-  for (let i = 0; i < elements.length; i++) {
+  for (let i = 0; i < items.length; i++) {
     const comment = commentTemplate.cloneNode(true);
-    comment.querySelector('img').src = elements[i].avatar;
-    comment.querySelector('img').alt = elements[i].name;
-    comment.querySelector('.social__text').textContent = elements[i].message;
+    comment.querySelector('img').src = items[i].avatar;
+    comment.querySelector('img').alt = items[i].name;
+    comment.querySelector('.social__text').textContent = items[i].message;
     elementsArray.push(comment);
     commentsContainer.append(...elementsArray);
   }
