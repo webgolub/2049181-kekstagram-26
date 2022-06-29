@@ -1,23 +1,27 @@
-// Отрисовка окна с полноразмерным изображением
 const overlay = document.querySelector('.big-picture');
-
 const commentsContainer = overlay.querySelector('.social__comments');
 const commentTemplate = commentsContainer.querySelector(':first-child').cloneNode(true);
 
+// Обработчик события - закрытие модального окна по клавише ESC
 const closeBigPictureEscHandler = (evt) => {
   if (evt.keyCode === 27){
     overlay.classList.add('hidden');
     document.querySelector('body').classList.remove('modal-open');
     document.removeEventListener ('keydown', closeBigPictureEscHandler);
+    // eslint-disable-next-line no-use-before-define
+    overlay.querySelector('#picture-cancel').addEventListener('click', closeBigPictureClickHandler);
   }
 };
 
-const closeBigPictureClickHandler = () => {
+// Обработчик события - закрытие модального окна по клику на кнопку закрытия
+const closeBigPictureClickHandler = function () {
   overlay.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
   document.removeEventListener ('keydown', closeBigPictureEscHandler);
+  overlay.querySelector('#picture-cancel').addEventListener('click', closeBigPictureClickHandler);
 };
 
+// Функция рендера комменариев внутри модального окна
 const renderComments = (items) => {
 
   const elementsArray = [];
@@ -32,6 +36,7 @@ const renderComments = (items) => {
   }
 };
 
+// Функция рендера модального окна просмотра полноразмерного изображения
 const renderFullsizeViewer = ({url, likes, comments, description}) => function (evt) {
   evt.preventDefault();
   overlay.classList.remove('hidden');
