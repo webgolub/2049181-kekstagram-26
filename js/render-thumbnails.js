@@ -1,5 +1,5 @@
 import { renderFullsizeViewer } from './viewer.js';
-
+const element = thumbnailTemplate.cloneNode(true);
 
 // Нахождение шаблона миниатюры
 const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -7,11 +7,11 @@ const thumbnailTemplate = document.querySelector('#picture').content.querySelect
 const thumbnailsContainer = document.querySelector('.pictures');
 
 // Функция для отрисовки миниатюр на основе массива объектов
-const renderThumbnails = (thumbnails) => {
+const renderThumbnails = (photos) => {
 
   const thumbnailElements = [];
-  thumbnails.forEach(({url, comments, likes, description}) => {
-    const element = thumbnailTemplate.cloneNode(true);
+  photos.forEach(({url, comments, likes, description}) => {
+
     const thumbnailClickHandler = renderFullsizeViewer({url, comments, likes, description});
     element.querySelector('img').src = url;
     element.querySelector('.picture__comments').textContent = comments.length;
@@ -21,6 +21,15 @@ const renderThumbnails = (thumbnails) => {
   });
 
   thumbnailsContainer.append(...thumbnailElements);
+};
+
+// Обработчик событий для миниатюры
+const thumbnailClickHandler = (thumbnail) => {
+  element.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    renderFullsizeViewer(thumbnail);
+
+  });
 };
 
 export {renderThumbnails};

@@ -1,55 +1,81 @@
-const overlay = document.querySelector('.big-picture');
-const commentsContainer = overlay.querySelector('.social__comments');
-const commentTemplate = commentsContainer.querySelector(':first-child').cloneNode(true);
+const CLOSE_KEY = 'Escape';
+// Модальное окно просмотра большого изображения
+const overlayNode = document.querySelector('.big-picture');
+// Контейнер для комментариев в модальном окне
+const modalCommentsContainerNode = overlayNode.querySelector('.social__comments');
+// Шаблон комментария в модальном окне
+const modalCommentTemplateNode = modalCommentsContainerNode.querySelector(':first-child');
+// Кнопка закрытия модального окна
+const modalCloseButtonNode = overlayNode.querySelector('#picture-cancel');
+// Большое изображение в модальном окне
+const modalBigPictureNode = overlayNode.querySelector('.big-picture__img').querySelector('img');
+// Счётчик лайков в модальном окне
+const modalLikesCountNode = overlayNode.querySelector('.likes-count');
+// Счётчик комментариев в модальном окне
+const modalCommentsCountNode = overlayNode.querySelector('.comments-count');
+// Подпись к большому изображению
+const modalSocialCaptionNode = overlayNode.querySelector('.social__caption');
+// Количество отображённых комментариев
+const modalSocialCommentsCount = overlayNode.querySelector('.social__comment-count');
+// Кнопка загрузки новой порции комментариев
+const modalCommentsLoaderButton = overlayNode.querySelector('.comments-loader');
+// Тег <body>
+const bodyNode = document.querySelector('body');
 
 // Обработчик события - закрытие модального окна по клавише ESC
-const closeBigPictureEscHandler = (evt) => {
-  if (evt.keyCode === 27){
-    overlay.classList.add('hidden');
-    document.querySelector('body').classList.remove('modal-open');
-    document.removeEventListener ('keydown', closeBigPictureEscHandler);
-    // eslint-disable-next-line no-use-before-define
-    overlay.querySelector('#picture-cancel').addEventListener('click', closeBigPictureClickHandler);
+const modalCloseByKeyHandler = (evt) => {
+  if (evt.code === CLOSE_KEY){
+    overlayNode.classList.add('hidden');
+    bodyNode.classList.remove('modal-open');
+    document.removeEventListener('keydown', modalCloseByKeyHandler);
+    /* Здесь обработчик клика по кнопке закрытия модального окна не снимается, т.к. само окно уже скрыто и кликнуть по нему невозможно.
+    Такой вариант имеет право на жизнь? Хотя, конечно, оптимальностью тут не пахнет.*/
   }
 };
 
 // Обработчик события - закрытие модального окна по клику на кнопку закрытия
-const closeBigPictureClickHandler = function () {
-  overlay.classList.add('hidden');
-  document.querySelector('body').classList.remove('modal-open');
-  document.removeEventListener ('keydown', closeBigPictureEscHandler);
-  overlay.querySelector('#picture-cancel').addEventListener('click', closeBigPictureClickHandler);
+const modalCloseByClickHandler = () => {
+  overlayNode.classList.add('hidden');
+  bodyNode.classList.remove('modal-open');
+  // Обработчик нажатия ESC снимается чтобы нажатие клавиши ничему не мешало
+  document.removeEventListener ('keydown', modalCloseByKeyHandler);
 };
 
 // Функция рендера комменариев внутри модального окна
-const renderComments = (items) => {
+const renderComments = (comments) => {
 
-  const elementsArray = [];
-  commentsContainer.textContent = '';
-  for (let i = 0; i < items.length; i++) {
-    const comment = commentTemplate.cloneNode(true);
-    comment.querySelector('img').src = items[i].avatar;
-    comment.querySelector('img').alt = items[i].name;
-    comment.querySelector('.social__text').textContent = items[i].message;
-    elementsArray.push(comment);
-    commentsContainer.append(...elementsArray);
+  const commentNodes = [];
+  modalCommentsContainerNode.replaceChildren();
+  for (let i = 0; i < comments.length; i++) {
+    const item = comments[i];
+    const commentNode = modalCommentTemplateNode.cloneNode(true);
+    const commentImageNode = commentNode.querySelector('img');
+    commentImageNode.src = item.avatar;
+    commentImageNode.alt = item.name;
+    commentNode.querySelector('.social__text').textContent = item.message;
+    commentNodes.push(commentNode);
   }
+  modalCommentsContainerNode.append(...commentNodes);
 };
 
 // Функция рендера модального окна просмотра полноразмерного изображения
 const renderFullsizeViewer = ({url, likes, comments, description}) => function (evt) {
   evt.preventDefault();
-  overlay.classList.remove('hidden');
-  overlay.querySelector('#picture-cancel').addEventListener('click', closeBigPictureClickHandler);
-  overlay.querySelector('.big-picture__img').querySelector('img').src = url;
-  overlay.querySelector('.likes-count').textContent = likes;
-  overlay.querySelector('.comments-count').textContent = comments.length;
-  overlay.querySelector('.social__caption').textContent = description;
+
+  modalCloseButtonNode.addEventListener('click', modalCloseByClickHandler, {once: true});
+  modalBigPictureNode.src = url;
+  modalLikesCountNode.textContent = likes;
+  modalCommentsCountNode.textContent = comments.length;
+  modalSocialCaptionNode.textContent = description;
+
   renderComments(comments);
-  overlay.querySelector('.social__comment-count').classList.add('hidden');
-  overlay.querySelector('.comments-loader').classList.add('hidden');
-  document.querySelector('body').classList.add('modal-open');
-  document.addEventListener('keydown', closeBigPictureEscHandler);
+
+  modalSocialCommentsCount.classList.add('hidden');
+  modalCommentsLoaderButton.classList.add('hidden');
+  overlayNode.classList.remove('hidden');
+  bodyNode.classList.add('modal-open');
+  document.addEventListener('keydown', modalCloseByKeyHandler);
 };
+
 
 export {renderFullsizeViewer};
