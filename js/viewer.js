@@ -1,4 +1,5 @@
-const CLOSE_KEY = 'Escape';
+import { isEscKey } from './util.js';
+
 // Модальное окно просмотра большого изображения
 const overlayNode = document.querySelector('.big-picture');
 // Контейнер для комментариев в модальном окне
@@ -24,7 +25,7 @@ const bodyNode = document.querySelector('body');
 
 // Обработчик события - закрытие модального окна по клавише ESC
 const modalCloseByKeyHandler = (evt) => {
-  if (evt.code === CLOSE_KEY){
+  if (isEscKey(evt)){
     overlayNode.classList.add('hidden');
     bodyNode.classList.remove('modal-open');
     document.removeEventListener('keydown', modalCloseByKeyHandler);
@@ -76,6 +77,5 @@ const renderFullsizeViewer = ({url, likes, comments, description}) => function (
   bodyNode.classList.add('modal-open');
   document.addEventListener('keydown', modalCloseByKeyHandler);
 };
-
 
 export {renderFullsizeViewer};
