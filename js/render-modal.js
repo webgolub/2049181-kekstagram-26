@@ -1,4 +1,4 @@
-import { isEscKey } from './util.js';
+import {isEscKey} from './util.js';
 
 // Модальное окно просмотра большого изображения
 const modalNode = document.querySelector('.big-picture');
@@ -23,44 +23,11 @@ const modalCommentsLoaderButton = modalNode.querySelector('.comments-loader');
 // Тег <body>
 const bodyNode = document.querySelector('body');
 
-// Обработчик события - закрытие модального окна по клавише ESC
-const modalCloseByKeyHandler = (evt) => {
-  if (isEscKey(evt)){
-    modalNode.classList.add('hidden');
-    bodyNode.classList.remove('modal-open');
-    document.removeEventListener('keydown', modalCloseByKeyHandler);
-    /* Здесь обработчик клика по кнопке закрытия модального окна не снимается, т.к. само окно уже скрыто и кликнуть по нему невозможно.
-    Такой вариант имеет право на жизнь? Хотя, конечно, оптимальностью тут не пахнет.*/
-  }
-};
-
-// Обработчик события - закрытие модального окна по клику на кнопку закрытия
-const modalCloseByClickHandler = () => {
-  modalNode.classList.add('hidden');
-  bodyNode.classList.remove('modal-open');
-  // Обработчик нажатия ESC снимается чтобы нажатие клавиши ничему не мешало
-  document.removeEventListener ('keydown', modalCloseByKeyHandler);
-};
-
-// *Функция открытия модального окна
-const openPictureModal = () {
-  // 1. Показать окно
-  // 2. Добавить обработчики для закрытия
-  // 3. Прочая логика
-};
-
-// *Функция закрытия модального окна
-const closePictureModal = () {
-  // 1. Скрыть окно
-  // 2. Удалить обработчики для закрытия
-  // 3. Прочая логика
-};
-
 // Функция рендера комменариев внутри модального окна
 const renderComments = (comments) => {
-
   const commentNodes = [];
   modalCommentsContainerNode.replaceChildren();
+
   for (let i = 0; i < comments.length; i++) {
     const item = comments[i];
     const commentNode = modalCommentTemplateNode.cloneNode(true);
@@ -74,22 +41,51 @@ const renderComments = (comments) => {
 };
 
 // Функция рендера модального окна просмотра полноразмерного изображения
-const renderFullsizeViewer = ({url, likes, comments, description}) => function (evt) {
-  evt.preventDefault();
-
-  modalCloseButtonNode.addEventListener('click', modalCloseByClickHandler, {once: true});
+const renderModalNode = ({url, likes, comments, description}) => {
   modalBigPictureNode.src = url;
   modalLikesCountNode.textContent = likes;
   modalCommentsCountNode.textContent = comments.length;
   modalSocialCaptionNode.textContent = description;
-
   renderComments(comments);
-
   modalSocialCommentsCount.classList.add('hidden');
   modalCommentsLoaderButton.classList.add('hidden');
-  modalNode.classList.remove('hidden');
-  bodyNode.classList.add('modal-open');
-  document.addEventListener('keydown', modalCloseByKeyHandler);
 };
 
-export {renderFullsizeViewer};
+// Обработчик клика по кнопке закрытия модального окна
+const onModalCloseButtonClick = (evt) => {
+  evt.preventDefault();
+  closePictureModal();
+};
+
+// Обработчик нажатия на клавишу ESC
+const onModalEscKeydown = (evt) => {
+  if (isEscKey(evt)){
+    evt.preventDefault();
+    closePictureModal();
+  }
+};
+
+// Функция открытия модального окна
+function openPictureModal (photo) {
+  // 1. Показать окно
+  renderModalNode(photo);
+  modalNode.classList.remove('hidden');
+  bodyNode.classList.add('modal-open');
+  // 2. Добавить обработчики для закрытия
+  modalCloseButtonNode.addEventListener('click', onModalCloseButtonClick);
+  document.addEventListener('keydown', onModalEscKeydown);
+  // 3. Прочая логика
+}
+
+// Функция закрытия модального окна
+function closePictureModal () {
+  // 1. Скрыть окно
+  modalNode.classList.add('hidden');
+  bodyNode.classList.remove('modal-open');
+  // 2. Удалить обработчики для закрытия
+  modalCloseButtonNode.removeEventListener('click', onModalCloseButtonClick);
+  document.removeEventListener('keydown', onModalEscKeydown);
+  // 3. Прочая логика
+}
+
+export {openPictureModal, closePictureModal};
