@@ -3,6 +3,8 @@ import {openPictureModal, closePictureModal} from './render-modal.js';
 import {isEscKey} from './util.js';
 
 const thumbnailsContainer = document.querySelector('.pictures');
+// Кнопка закрытия модального окна
+const modalCloseButton = document.querySelector('.big-picture').querySelector('#picture-cancel');
 
 // Обработчик нажатия на клавишу ESC
 const onModalEscKeydown = (evt) => {
@@ -25,9 +27,9 @@ const renderThumbnail = (photo) => {
   thumbnail.addEventListener('click', (evt) => {
     evt.preventDefault();
     openPictureModal(photo);
+    modalCloseButton.addEventListener('click', onModalCloseButtonClick);
+    document.addEventListener('keydown', onModalEscKeydown);
   });
-
-  document.addEventListener('keydown', onModalEscKeydown);
 
   return thumbnail;
 };

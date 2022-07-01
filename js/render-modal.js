@@ -6,8 +6,7 @@ const modalWindow = document.querySelector('.big-picture');
 const modalCommentsContainer = modalWindow.querySelector('.social__comments');
 // Шаблон комментария в модальном окне
 const modalCommentTemplate = modalCommentsContainer.querySelector(':first-child');
-// Кнопка закрытия модального окна
-const modalCloseButton = modalWindow.querySelector('#picture-cancel');
+
 // Большое изображение в модальном окне
 const modalBigPicture = modalWindow.querySelector('.big-picture__img').querySelector('img');
 // Счётчик лайков в модальном окне
@@ -20,6 +19,8 @@ const modalSocialCaption = modalWindow.querySelector('.social__caption');
 const modalSocialCommentsCount = modalWindow.querySelector('.social__comment-count');
 // Кнопка загрузки новой порции комментариев
 const modalCommentsLoaderButton = modalWindow.querySelector('.comments-loader');
+// Кнопка закрытия модального окна
+const modalCloseButton = modalWindow.querySelector('#picture-cancel');
 
 // Функция создания DOM-узла комментария
 const createComment = (comment) => {
@@ -49,9 +50,6 @@ const openPictureModal = (photo) => {
   renderModalWindow(photo);
   modalWindow.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  // 2. Добавить обработчики для закрытия
-  modalCloseButton.addEventListener('click', onModalCloseButtonClick);
-  document.addEventListener('keydown', onModalEscKeydown);
 };
 
 // Функция закрытия модального окна
