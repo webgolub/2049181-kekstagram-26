@@ -1,18 +1,21 @@
-// Отрисовка миниатюр
-import {createPhotos} from './data.js';
+import {createThumbnail} from './create-thumbnail.js';
+import {openPictureModal} from './render-modal.js';
 
-const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const thumbnailsContainer = document.querySelector('.pictures');
 
-const somePhotos = createPhotos(25);
-const thumbnailsContainerFragment = document.createDocumentFragment();
+const renderThumbnail = (photo) => {
+  const node = createThumbnail(photo);
 
-somePhotos.forEach(({url, comments, likes}) => {
-  const element = thumbnailTemplate.cloneNode(true);
-  element.querySelector('img').src = url;
-  element.querySelector('.picture__comments').textContent = comments.length;
-  element.querySelector('.picture__likes').textContent = likes;
-  thumbnailsContainerFragment.appendChild(element);
-});
+  node.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    openPictureModal(photo);
+  });
 
-thumbnailsContainer.appendChild(thumbnailsContainerFragment);
+  return node;
+};
+
+const renderThumbnails = (photos) => {
+  thumbnailsContainer.append(...photos.map(renderThumbnail));
+};
+
+export {renderThumbnails};
