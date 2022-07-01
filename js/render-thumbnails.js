@@ -1,21 +1,39 @@
 import {createThumbnail} from './create-thumbnail.js';
-import {openPictureModal} from './render-modal.js';
+import {openPictureModal, closePictureModal} from './render-modal.js';
+import {isEscKey} from './util.js';
 
 const thumbnailsContainer = document.querySelector('.pictures');
 
-const renderThumbnail = (photo) => {
-  const node = createThumbnail(photo);
+// Обработчик нажатия на клавишу ESC
+const onModalEscKeydown = (evt) => {
+  if (isEscKey(evt)){
+    evt.preventDefault();
+    closePictureModal();
+  }
+};
 
-  node.addEventListener('click', (evt) => {
+// Обработчик клика по кнопке закрытия модального окна
+const onModalCloseButtonClick = (evt) => {
+  evt.preventDefault();
+  closePictureModal();
+};
+
+
+const renderThumbnail = (photo) => {
+  const thumbnail = createThumbnail(photo);
+
+  thumbnail.addEventListener('click', (evt) => {
     evt.preventDefault();
     openPictureModal(photo);
   });
 
-  return node;
+  document.addEventListener('keydown', onModalEscKeydown);
+
+  return thumbnail;
 };
 
 const renderThumbnails = (photos) => {
   thumbnailsContainer.append(...photos.map(renderThumbnail));
 };
 
-export {renderThumbnails};
+export {renderThumbnails, onModalCloseButtonClick, onModalEscKeydown};
