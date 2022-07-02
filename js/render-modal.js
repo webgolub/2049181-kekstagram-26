@@ -52,7 +52,7 @@ const openPictureModal = (photo) => {
   document.body.classList.add('modal-open');
 };
 
-// Функция закрытия модального окна
+// Функция закрытия модального окн
 const closePictureModal = () => {
   // 1. Скрыть окно
   modalWindow.classList.add('hidden');
