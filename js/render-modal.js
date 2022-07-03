@@ -1,17 +1,16 @@
-import {onModalEscKeydown, onModalCloseButtonClick} from './render-thumbnails.js';
+import {isEscKey} from './util.js';
 
-// Модальное окно просмотра большого изображения
+// Модальное окно просмотра большой фотографии
 const modalWindow = document.querySelector('.big-picture');
-// Контейнер для комментариев в модальном окне
+// Контейнер для комментариев в попапе
 const modalCommentsContainer = modalWindow.querySelector('.social__comments');
-// Шаблон комментария в модальном окне
+// Шаблон комментария в попапе
 const modalCommentTemplate = modalCommentsContainer.querySelector(':first-child');
-
-// Большое изображение в модальном окне
+// Большое изображение в попапе
 const modalBigPicture = modalWindow.querySelector('.big-picture__img').querySelector('img');
-// Счётчик лайков в модальном окне
+// Счётчик лайков в попапе
 const modalLikesCount = modalWindow.querySelector('.likes-count');
-// Счётчик комментариев в модальном окне
+// Счётчик комментариев в попапе
 const modalCommentsCount = modalWindow.querySelector('.comments-count');
 // Подпись к большому изображению
 const modalSocialCaption = modalWindow.querySelector('.social__caption');
@@ -19,8 +18,14 @@ const modalSocialCaption = modalWindow.querySelector('.social__caption');
 const modalSocialCommentsCount = modalWindow.querySelector('.social__comment-count');
 // Кнопка загрузки новой порции комментариев
 const modalCommentsLoaderButton = modalWindow.querySelector('.comments-loader');
-// Кнопка закрытия модального окна
-const modalCloseButton = modalWindow.querySelector('#picture-cancel');
+
+// Переменная для коллбэка обработчика закрытия
+let onModalCloseCallback = null;
+
+// Функция для поулчения коллбэка из другого модуля
+const setOnModalCloseCallback = (callback) => {
+  onModalCloseCallback = callback;
+};
 
 // Функция создания DOM-узла комментария
 const createComment = (comment) => {
@@ -33,7 +38,7 @@ const createComment = (comment) => {
   return newComment;
 };
 
-// Функция рендера модального окна просмотра полноразмерного изображения
+// Функция рендера модального окна просмотра полноразмерной фотографии
 const renderModalWindow = ({url, likes, comments, description}) => {
   modalBigPicture.src = url;
   modalLikesCount.textContent = likes;
@@ -44,22 +49,30 @@ const renderModalWindow = ({url, likes, comments, description}) => {
   modalCommentsLoaderButton.classList.add('hidden');
 };
 
-// Функция открытия модального окна
+// Функция открытия попапа
 const openPictureModal = (photo) => {
-  // 1. Показать окно
+
   renderModalWindow(photo);
   modalWindow.classList.remove('hidden');
   document.body.classList.add('modal-open');
 };
 
-// Функция закрытия модального окн
+// Функция закрытия попапа
 const closePictureModal = () => {
-  // 1. Скрыть окно
+
   modalWindow.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  // 2. Удалить обработчики для закрытия
-  modalCloseButton.removeEventListener('click', onModalCloseButtonClick);
-  document.removeEventListener('keydown', onModalEscKeydown);
 };
 
-export {openPictureModal, closePictureModal};
+// Обработчик закрытия попапа по клавише ESC или по клику на кнопку закрытия
+const onModalCloseModal = (evt) => {
+  if (isEscKey(evt)) {
+    evt.preventDefault();
+    onModalCloseCallback();
+  } else if (evt.target.id === 'picture-cancel') {
+    evt.preventDefault();
+    onModalCloseCallback();
+  }
+};
+
+export {openPictureModal, closePictureModal, setOnModalCloseCallback, onModalCloseModal};

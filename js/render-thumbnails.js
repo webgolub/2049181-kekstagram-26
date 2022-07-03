@@ -1,41 +1,36 @@
 import {createThumbnail} from './create-thumbnail.js';
-import {openPictureModal, closePictureModal} from './render-modal.js';
-import {isEscKey} from './util.js';
-
+import {onModalCloseModal, openPictureModal, closePictureModal, setOnModalCloseCallback} from './render-modal.js';
+// Контейнер для миниатюр
 const thumbnailsContainer = document.querySelector('.pictures');
-// Кнопка закрытия модального окна
+// Кнопка закрытия попапа
 const modalCloseButton = document.querySelector('.big-picture').querySelector('#picture-cancel');
 
-// Обработчик нажатия на клавишу ESC
-const onModalEscKeydown = (evt) => {
-  if (isEscKey(evt)){
-    evt.preventDefault();
-    closePictureModal();
-  }
-};
-
-// Обработчик клика по кнопке закрытия модального окна
-const onModalCloseButtonClick = (evt) => {
-  evt.preventDefault();
-  closePictureModal();
-};
-
-
+// Функция рендера одной миниатюры
 const renderThumbnail = (photo) => {
   const thumbnail = createThumbnail(photo);
 
   thumbnail.addEventListener('click', (evt) => {
     evt.preventDefault();
+
     openPictureModal(photo);
-    modalCloseButton.addEventListener('click', onModalCloseButtonClick);
-    document.addEventListener('keydown', onModalEscKeydown);
+
+    // Функция задаёт коллбэк для описания поведения обработчика закрытия попапа
+    setOnModalCloseCallback(() => {
+      closePictureModal();
+      modalCloseButton.removeEventListener('click', onModalCloseModal);
+      document.removeEventListener('keydown', onModalCloseModal);
+    });
+    // Подписка на события для закрытия попапа
+    modalCloseButton.addEventListener('click', onModalCloseModal);
+    document.addEventListener('keydown', onModalCloseModal);
   });
 
   return thumbnail;
 };
 
+// Функция рендера миниатюр из массива фотографий
 const renderThumbnails = (photos) => {
   thumbnailsContainer.append(...photos.map(renderThumbnail));
 };
 
-export {renderThumbnails, onModalCloseButtonClick, onModalEscKeydown};
+export {renderThumbnails};
