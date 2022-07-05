@@ -1408,3 +1408,7 @@ main {
 .hidden {
   display: none;
 }
+
+.form__error {
+  color: red;
+}
