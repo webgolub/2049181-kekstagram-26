@@ -8,10 +8,10 @@ const commentInput = imgUploadOverlay.querySelector('.text__description');
 const hashtagsInput = imgUploadOverlay.querySelector('.text__hashtags');
 
 const pristine = new Pristine (uploadForm, {
-  classTo: 'img-upload__form',
+  classTo: 'img-upload__field-wrapper',
   errorClass: 'form-item__invalid',
   successClass: 'form-item__valid',
-  errorTextParent: 'img-upload__text',
+  errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div',
   errorTextClass: 'form__error'
 });
@@ -62,8 +62,14 @@ pristine.addValidator(hashtagsInput, (hashtags) => hashtags === '' || preparedHa
 
 // Обработчик действия при отправке формы
 uploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  if(pristine.validate()) {
-    console.log('validate good');
-  } else {console.log('validate bad');}
+  const isValid = pristine.validate();
+
+  if(!isValid) {
+    evt.preventDefault();}
+});
+
+/* Обработчик события изменения формы чтобы при закрытии попапа
+   очищались предупреждений от старых проверок */
+uploadForm.addEventListener('change', () => {
+  pristine.validate();
 });

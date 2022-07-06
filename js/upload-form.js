@@ -11,7 +11,10 @@ const imgUploadOverlayCancellButton = uploadForm.querySelector('#upload-cancel')
    Тут я вижу что код повторяется два раза и не соблюдается DRY, но не пойму как вынести повторяющуюся
   часть в функцию, чтобы не получить предупреждения от линтера что функция используется раньше чем объявлена */
 const onImgUploadOverlayClickOrEscKeydown = (evt) => {
-  if (evt.code === 'Escape' || evt.code === 'Esc') {
+  if ((evt.code === 'Escape' || evt.code === 'Esc') &&
+  document.activeElement.className !== 'text__hashtags' &&
+  document.activeElement.className !== 'text__description' ) {
+
     imgUploadOverlay.classList.add('hidden');
     document.body.classList.remove('modal-open');
     uploadForm.reset();
