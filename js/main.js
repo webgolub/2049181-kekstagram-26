@@ -1,6 +1,6 @@
-import {renderThumbnails} from './render-thumbnails.js';
-import {createPhotos} from './data.js';
-import './upload-form.js';
+import { renderThumbnails } from './render-thumbnails.js';
+import { createPhotos } from './data.js';
+import './editor.js';
 import './validate.js';
 
 // Создание массива объектов с «рыбой» фотографий
