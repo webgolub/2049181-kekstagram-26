@@ -37,6 +37,7 @@ const onImgUploadOverlayEscKeydown = (evt) => {
   }
 };
 
+// Функция создания одной миниатюры
 const renderThumbnail = (photo) => {
   const thumbnail = createThumbnail(photo);
 
