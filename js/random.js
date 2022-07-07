@@ -28,4 +28,4 @@ const spawnGetRandomPositiveIntegerNoRepeat = (min, max) => {
 // Функция для получения случайного элемента массива
 const getRandomArrayElement = (items) => items[getRandomPositiveInteger(0, items.length - 1)];
 
-export {getRandomPositiveInteger, spawnGetRandomPositiveIntegerNoRepeat, getRandomArrayElement};
+export { getRandomPositiveInteger, spawnGetRandomPositiveIntegerNoRepeat, getRandomArrayElement };
