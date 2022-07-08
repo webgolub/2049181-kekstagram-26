@@ -1,4 +1,6 @@
 import { isEscKey } from './util.js';
+import { onScaleButtonsClick } from './editor-scale.js';
+import './editor-effects.js';
 
 // Значения атрибута name для текстовых полей
 const TEXT_FIELD_NAMES = ['hashtags', 'description'];
@@ -10,6 +12,10 @@ const uploadFileInput = uploadForm.querySelector('#upload-file');
 const imgUploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 // Кнопка закрытия оверлея
 const imgUploadOverlayCancellButton = uploadForm.querySelector('#upload-cancel');
+// Поле вывода масштаба
+const scaleValueDisplay = uploadForm.querySelector('.scale__control--value');
+// Группа полей для управления масштабом
+const scaleInputsFieldset = uploadForm.querySelector('.img-upload__scale');
 
 const isNotTextFields = (evt) => ! TEXT_FIELD_NAMES.includes(evt.target.name);
 
@@ -36,16 +42,16 @@ function closeUploadOverlay () {
   uploadForm.reset();
   document.removeEventListener('keydown', onImgUploadOverlayEscKeydown);
   imgUploadOverlayCancellButton.removeEventListener('click', onImgUploadOverlayCancelButtonClick);
+  scaleInputsFieldset.removeEventListener('click', onScaleButtonsClick);
 }
 
 // Событие изменения поля загрузки изображения
 uploadFileInput.addEventListener('change', () => {
   imgUploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
-
+  scaleValueDisplay.value =  '100%';
 
   document.addEventListener('keydown', onImgUploadOverlayEscKeydown);
   imgUploadOverlayCancellButton.addEventListener('click', onImgUploadOverlayCancelButtonClick);
+  scaleInputsFieldset.addEventListener('click', onScaleButtonsClick);
 });
-
-export {closeUploadOverlay};
