@@ -20,7 +20,6 @@ const commentInput = imgUploadOverlay.querySelector('.text__description');
 const hashtagsInput = imgUploadOverlay.querySelector('.text__hashtags');
 
 const hashtagEndingRegExp = /[^-_=+;:,.]$/m;
-
 const hashtagRegExp = /^#[a-zA-Zа-яА-ЯёЁ0-9]{0,}$/;
 
 const pristine = new Pristine (uploadForm, {
