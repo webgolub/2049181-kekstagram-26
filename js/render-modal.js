@@ -1,91 +1,67 @@
-import {isEscKey} from './util.js';
+import {onModalEscKeydown, onModalCloseButtonClick} from './render-thumbnails.js';
 
 // Модальное окно просмотра большого изображения
-const modalNode = document.querySelector('.big-picture');
+const modalWindow = document.querySelector('.big-picture');
 // Контейнер для комментариев в модальном окне
-const modalCommentsContainerNode = modalNode.querySelector('.social__comments');
+const modalCommentsContainer = modalWindow.querySelector('.social__comments');
 // Шаблон комментария в модальном окне
-const modalCommentTemplateNode = modalCommentsContainerNode.querySelector(':first-child');
+const modalCommentTemplate = modalCommentsContainer.querySelector(':first-child');
 // Кнопка закрытия модального окна
-const modalCloseButtonNode = modalNode.querySelector('#picture-cancel');
+const modalCloseButton = modalWindow.querySelector('#picture-cancel');
 // Большое изображение в модальном окне
-const modalBigPictureNode = modalNode.querySelector('.big-picture__img').querySelector('img');
+const modalBigPicture = modalWindow.querySelector('.big-picture__img').querySelector('img');
 // Счётчик лайков в модальном окне
-const modalLikesCountNode = modalNode.querySelector('.likes-count');
+const modalLikesCount = modalWindow.querySelector('.likes-count');
 // Счётчик комментариев в модальном окне
-const modalCommentsCountNode = modalNode.querySelector('.comments-count');
+const modalCommentsCount = modalWindow.querySelector('.comments-count');
 // Подпись к большому изображению
-const modalSocialCaptionNode = modalNode.querySelector('.social__caption');
+const modalSocialCaption = modalWindow.querySelector('.social__caption');
 // Количество отображённых комментариев
-const modalSocialCommentsCount = modalNode.querySelector('.social__comment-count');
+const modalSocialCommentsCount = modalWindow.querySelector('.social__comment-count');
 // Кнопка загрузки новой порции комментариев
-const modalCommentsLoaderButton = modalNode.querySelector('.comments-loader');
-// Тег <body>
-const bodyNode = document.querySelector('body');
+const modalCommentsLoaderButton = modalWindow.querySelector('.comments-loader');
 
-// Функция рендера комменариев внутри модального окна
-const renderComments = (comments) => {
-  const commentNodes = [];
-  modalCommentsContainerNode.replaceChildren();
+// Функция создания DOM-узла комментария
+const createComment = (comment) => {
+  const newComment = modalCommentTemplate.cloneNode(true);
+  const commentImage = newComment.querySelector('img');
+  commentImage.src = comment.avatar;
+  commentImage.alt = comment.name;
+  newComment.querySelector('.social__text').textContent = comment.message;
 
-  for (let i = 0; i < comments.length; i++) {
-    const item = comments[i];
-    const commentNode = modalCommentTemplateNode.cloneNode(true);
-    const commentImageNode = commentNode.querySelector('img');
-    commentImageNode.src = item.avatar;
-    commentImageNode.alt = item.name;
-    commentNode.querySelector('.social__text').textContent = item.message;
-    commentNodes.push(commentNode);
-  }
-  modalCommentsContainerNode.append(...commentNodes);
+  return newComment;
 };
 
 // Функция рендера модального окна просмотра полноразмерного изображения
-const renderModalNode = ({url, likes, comments, description}) => {
-  modalBigPictureNode.src = url;
-  modalLikesCountNode.textContent = likes;
-  modalCommentsCountNode.textContent = comments.length;
-  modalSocialCaptionNode.textContent = description;
-  renderComments(comments);
+const renderModalWindow = ({url, likes, comments, description}) => {
+  modalBigPicture.src = url;
+  modalLikesCount.textContent = likes;
+  modalCommentsCount.textContent = comments.length;
+  modalSocialCaption.textContent = description;
+  modalCommentsContainer.replaceChildren(...comments.map(createComment));
   modalSocialCommentsCount.classList.add('hidden');
   modalCommentsLoaderButton.classList.add('hidden');
 };
 
-// Обработчик клика по кнопке закрытия модального окна
-const onModalCloseButtonClick = (evt) => {
-  evt.preventDefault();
-  closePictureModal();
-};
-
-// Обработчик нажатия на клавишу ESC
-const onModalEscKeydown = (evt) => {
-  if (isEscKey(evt)){
-    evt.preventDefault();
-    closePictureModal();
-  }
-};
-
 // Функция открытия модального окна
-function openPictureModal (photo) {
+const openPictureModal = (photo) => {
   // 1. Показать окно
-  renderModalNode(photo);
-  modalNode.classList.remove('hidden');
-  bodyNode.classList.add('modal-open');
+  renderModalWindow(photo);
+  modalWindow.classList.remove('hidden');
+  document.body.classList.add('modal-open');
   // 2. Добавить обработчики для закрытия
-  modalCloseButtonNode.addEventListener('click', onModalCloseButtonClick);
+  modalCloseButton.addEventListener('click', onModalCloseButtonClick);
   document.addEventListener('keydown', onModalEscKeydown);
-  // 3. Прочая логика
-}
+};
 
 // Функция закрытия модального окна
-function closePictureModal () {
+const closePictureModal = () => {
   // 1. Скрыть окно
-  modalNode.classList.add('hidden');
-  bodyNode.classList.remove('modal-open');
+  modalWindow.classList.add('hidden');
+  document.body.classList.remove('modal-open');
   // 2. Удалить обработчики для закрытия
-  modalCloseButtonNode.removeEventListener('click', onModalCloseButtonClick);
+  modalCloseButton.removeEventListener('click', onModalCloseButtonClick);
   document.removeEventListener('keydown', onModalEscKeydown);
-  // 3. Прочая логика
-}
+};
 
 export {openPictureModal, closePictureModal};

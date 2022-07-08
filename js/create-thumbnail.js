@@ -4,13 +4,13 @@ const thumbnailTemplate = document.querySelector('#picture').content.querySelect
 // Создание узла миниатюры из объекта фотографии
 const createThumbnail = (photo) => {
   const {url, comments, likes} = photo;
-  const node = thumbnailTemplate.cloneNode(true);
+  const thumbnail = thumbnailTemplate.cloneNode(true);
 
-  node.querySelector('img').src = url;
-  node.querySelector('.picture__comments').textContent = comments.length;
-  node.querySelector('.picture__likes').textContent = likes;
+  thumbnail.querySelector('img').src = url;
+  thumbnail.querySelector('.picture__comments').textContent = comments.length;
+  thumbnail.querySelector('.picture__likes').textContent = likes;
 
-  return node;
+  return thumbnail;
 };
 
-export {createThumbnail};
+export { createThumbnail };

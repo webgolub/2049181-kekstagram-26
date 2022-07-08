@@ -1,4 +1,4 @@
-import {getRandomPositiveInteger, spawnGetRandomPositiveIntegerNoRepeat, getRandomArrayElement} from './random.js';
+import { getRandomPositiveInteger, spawnGetRandomPositiveIntegerNoRepeat, getRandomArrayElement } from './random.js';
 
 const NAMES = [
   'Артём',
@@ -68,4 +68,4 @@ const createPhoto = () => ({
 // Функция генерации массива постов с фотографиями
 const createPhotos = (quantity) => Array.from({length: quantity}, createPhoto);
 
-export {createPhotos};
+export { createPhotos };

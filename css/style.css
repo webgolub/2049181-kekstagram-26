@@ -1408,3 +1408,13 @@ main {
 .hidden {
   display: none;
 }
+
+.form__error {
+  color: red;
+}
+
+.text__hashtags + .form__error {
+  color: red;
+  margin-top: -15px;
+  margin-bottom: 5px;
+}
