@@ -57,9 +57,12 @@ pristine.addValidator(hashtagsInput, (value) => value === '' || parseHashtagsInp
 // Обработчик действия при отправке формы
 uploadForm.addEventListener('submit', (evt) => {
   const isValid = pristine.validate();
+  evt.preventDefault();
 
-  if(!isValid) {
-    evt.preventDefault();}
+  if(isValid) {
+    uploadForm.submit();
+    uploadForm.reset();
+  }
 });
 
 /* Обработчик события изменения формы чтобы при закрытии попапа
