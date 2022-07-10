@@ -18,14 +18,14 @@ const setScaleChangeHandler = (callback) => {
   scaleChangeCallback = callback;
 };
 
-const resetScale = () => {
-  scaleValueDisplay.value = '100%';
-};
-
 const renderScale = (value) => {
   currentScale = value;
   scaleValueDisplay.value = `${value}%`;
   scaleChangeCallback(value);
+};
+
+const resetScale = () => {
+  renderScale(ScaleValue.MAX);
 };
 
 scaleUpButton.addEventListener('click', () => {

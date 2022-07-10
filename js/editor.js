@@ -32,6 +32,7 @@ setScaleChangeHandler((value) => {
 // Обработчик клика по кнопке закрытия оверлея редактирования загружаемого изображения
 const onImgUploadOverlayCancelButtonClick = (evt) => {
   evt.preventDefault();
+  resetUploadPicture();
   closeUploadOverlay();
 };
 
@@ -39,6 +40,7 @@ const onImgUploadOverlayCancelButtonClick = (evt) => {
 const onImgUploadOverlayEscKeydown = (evt) => {
   if (isEscKey(evt) && isNotTextFields(evt)) {
     evt.preventDefault();
+    resetUploadPicture();
     closeUploadOverlay();
   }
 };
