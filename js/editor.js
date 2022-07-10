@@ -1,4 +1,6 @@
 import { isEscKey } from './util.js';
+import { resetScale, setScaleChangeHandler } from './editor-scale.js';
+import {resetEffects} from './editor-effects.js';
 
 // Значения атрибута name для текстовых полей
 const TEXT_FIELD_NAMES = ['hashtags', 'description'];
@@ -10,12 +12,27 @@ const uploadFileInput = uploadForm.querySelector('#upload-file');
 const imgUploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 // Кнопка закрытия оверлея
 const imgUploadOverlayCancellButton = uploadForm.querySelector('#upload-cancel');
+// Превью редактируемого изображения
+const imgPreview = uploadForm.querySelector('.img-upload__preview img');
+// Поле уровня эффекта
 
+// Проверка что фокус не на текстовых полях
 const isNotTextFields = (evt) => ! TEXT_FIELD_NAMES.includes(evt.target.name);
+
+// Функция сброса превью загружаемого изображения
+const resetUploadPicture = () => {
+  resetScale();
+  resetEffects();
+};
+// Функция установки коллбэка для функции отрисовки изменения масштаба изображения
+setScaleChangeHandler((value) => {
+  imgPreview.style.transform = `scale(${value / 100 })`;
+});
 
 // Обработчик клика по кнопке закрытия оверлея редактирования загружаемого изображения
 const onImgUploadOverlayCancelButtonClick = (evt) => {
   evt.preventDefault();
+  resetUploadPicture();
   closeUploadOverlay();
 };
 
@@ -23,6 +40,7 @@ const onImgUploadOverlayCancelButtonClick = (evt) => {
 const onImgUploadOverlayEscKeydown = (evt) => {
   if (isEscKey(evt) && isNotTextFields(evt)) {
     evt.preventDefault();
+    resetUploadPicture();
     closeUploadOverlay();
   }
 };
@@ -42,10 +60,8 @@ function closeUploadOverlay () {
 uploadFileInput.addEventListener('change', () => {
   imgUploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
-
+  resetUploadPicture();
 
   document.addEventListener('keydown', onImgUploadOverlayEscKeydown);
   imgUploadOverlayCancellButton.addEventListener('click', onImgUploadOverlayCancelButtonClick);
 });
-
-export {closeUploadOverlay};

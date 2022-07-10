@@ -6,5 +6,4 @@ const isEscKey = (evt) => ESCAPE_KEYS.includes(evt.key);
 // Функция проверки массива на уникальность
 const isArrayUnique = (items) => !items.some((item, index) => items.indexOf(item, index + 1) !== -1);
 
-
 export { checkTextLength, isEscKey, isArrayUnique };
