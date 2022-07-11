@@ -104,22 +104,22 @@ const updateSliderOptions = () => {
 };
 
 // Функция удаления классов эффектов
-const removeEffectsClasses = (element) => {
-  element.className.split(' ').forEach((item) => {
-    if(/effects__preview--/.test(item)) {element.classList.remove(item);} });
+const removeEffectsClasses = () => {
+  imgPreview.classList.remove(`effects__preview--${currentEffect}`);
 };
+
 // Функция сборса эффектов
 const resetEffects = () => {
+  removeEffectsClasses ();
   currentEffect = Effect.NONE;
   updateSliderOptions();
-  removeEffectsClasses (imgPreview);
   imgPreview.style.filter = '';
 
 };
 
 // Функция, добавляющая к превью изображения класс эффекта согласно выбранной радиокнопки
 const addEffectToImgPreview = () => {
-  removeEffectsClasses (imgPreview);
+  removeEffectsClasses ();
 
   if (currentEffect !== Effect.NONE) {
     imgPreview.classList.add(`effects__preview--${currentEffect}`);
@@ -128,8 +128,8 @@ const addEffectToImgPreview = () => {
 
 // Рендер эффекта
 const renderEffect = (evt) => {
+  removeEffectsClasses ();
   currentEffect = evt.target.value;
-  removeEffectsClasses (imgPreview);
   imgPreview.style.filter = '';
   addEffectToImgPreview(currentEffect);
   updateSliderOptions(currentEffect);
