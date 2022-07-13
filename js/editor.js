@@ -16,7 +16,12 @@ const imgUploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 const imgUploadOverlayCancellButton = uploadForm.querySelector('#upload-cancel');
 // Превью редактируемого изображения
 const imgPreview = uploadForm.querySelector('.img-upload__preview img');
-// Поле уровня эффекта
+// Кнопка отправки формы
+const imgUploadOverlaySubmitButton =  uploadForm.querySelector('.img-upload__submit');
+// Шаблон сообщения об успешной отправке
+const successUploadTemplate = document.querySelector('#success').content.querySelector('.success');
+// Шаблон сообщения об ошибке при отправке
+const errorUploadTemplate = document.querySelector('#error').content;
 
 // Проверка что фокус не на текстовых полях
 const isNotTextFields = (evt) => ! TEXT_FIELD_NAMES.includes(evt.target.name);
@@ -68,16 +73,54 @@ uploadFileInput.addEventListener('change', () => {
   imgUploadOverlayCancellButton.addEventListener('click', onImgUploadOverlayCancelButtonClick);
 });
 
+const blockSubmitButton = () => {
+  imgUploadOverlaySubmitButton.disabled = true;
+  imgUploadOverlaySubmitButton.textContent = 'Публикую...';
+};
+
+const unblockSubmitButton = () => {
+  imgUploadOverlaySubmitButton.disabled = false;
+  imgUploadOverlaySubmitButton.textContent = 'Опубликовать';
+};
+
+// Функция показа окна об успешной загрузке данных
+const showSuccessUploadModal = () => {
+  const modal = successUploadTemplate.cloneNode(true);
+  modal.querySelector('.success__button').addEventListener('click', () => {
+    resetUploadPicture();
+    closeUploadOverlay();
+    modal.remove();
+  });
+  document.body.append(modal);
+};
+showSuccessUploadModal();
+
 // Обработчик действия при отправке формы
 uploadForm.addEventListener('submit', (evt) => {
-  const isValid = validate();
   evt.preventDefault();
 
+  const isValid = validate();
   if(isValid) {
-    sendData();
-    uploadForm.reset();
+    blockSubmitButton();
+    sendData(() => {
+      // OnSucsess
+      unblockSubmitButton();
+      resetUploadPicture();
+      closeUploadOverlay();
+      uploadForm.reset();
+      showSuccessUploadModal();
+
+    },
+    () => {
+    // OnFail
+
+    },
+    //body
+    new FormData(uploadForm)
+    );
   }
 });
+
 
 /* Обработчик события изменения формы чтобы при закрытии попапа
    очищались предупреждения от старых проверок */
