@@ -1,6 +1,6 @@
 import { isEscKey } from './util.js';
-import { resetScale, setScaleChangeHandler } from './editor-scale.js';
-import { resetEffects } from './editor-effects.js';
+import { resetScale, setScaleChangeHandler } from './scale.js';
+import { resetEffects } from './effects.js';
 import { validate } from './validate.js';
 import { sendData } from './api.js';
 
@@ -93,7 +93,6 @@ const showSuccessUploadModal = () => {
   });
   document.body.append(modal);
 };
-showSuccessUploadModal();
 
 // Обработчик действия при отправке формы
 uploadForm.addEventListener('submit', (evt) => {

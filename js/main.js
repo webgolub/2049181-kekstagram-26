@@ -1,9 +1,9 @@
-import { renderThumbnails } from './render-thumbnails.js';
-import './editor.js';
+import { renderPictures } from './picture.js';
+import './form.js';
 import './validate.js';
 import './api.js';
 import { getData } from './api.js';
 
 
 // Отрисовка миниатюр
-getData(renderThumbnails);
+getData(renderPictures);

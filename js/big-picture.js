@@ -1,4 +1,4 @@
-import {onModalEscKeydown, onModalCloseButtonClick} from './render-thumbnails.js';
+import {onModalEscKeydown, onModalCloseButtonClick} from './picture.js';
 
 // Модальное окно просмотра большого изображения
 const modalWindow = document.querySelector('.big-picture');
