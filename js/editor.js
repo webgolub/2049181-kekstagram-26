@@ -1,6 +1,8 @@
 import { isEscKey } from './util.js';
 import { resetScale, setScaleChangeHandler } from './editor-scale.js';
-import {resetEffects} from './editor-effects.js';
+import { resetEffects } from './editor-effects.js';
+import { validate } from './validate.js';
+import { sendData } from './api.js';
 
 // Значения атрибута name для текстовых полей
 const TEXT_FIELD_NAMES = ['hashtags', 'description'];
@@ -64,4 +66,21 @@ uploadFileInput.addEventListener('change', () => {
 
   document.addEventListener('keydown', onImgUploadOverlayEscKeydown);
   imgUploadOverlayCancellButton.addEventListener('click', onImgUploadOverlayCancelButtonClick);
+});
+
+// Обработчик действия при отправке формы
+uploadForm.addEventListener('submit', (evt) => {
+  const isValid = validate();
+  evt.preventDefault();
+
+  if(isValid) {
+    sendData();
+    uploadForm.reset();
+  }
+});
+
+/* Обработчик события изменения формы чтобы при закрытии попапа
+   очищались предупреждения от старых проверок */
+uploadForm.addEventListener('change', () => {
+  validate();
 });
