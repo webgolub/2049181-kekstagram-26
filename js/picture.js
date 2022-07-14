@@ -1,16 +1,15 @@
-import { openPictureModal, closePictureModal } from './big-picture.js';
 import { isEscKey } from './util.js';
-// Контейнер для миниатюр
-const thumbnailsContainer = document.querySelector('.pictures');
+import { showBigPicture, hideBigPicture, setBigPictureCloseButtonClickHandler, setBigPictureEscKeydownHandler } from './big-picture.js';
 
-// Нахождение шаблона миниатюры
-const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
+// Контейнер для миниатюр
+const picturessContainer = document.querySelector('.pictures');
+// Шаблон миниатюры
+const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 // Создание узла миниатюры из объекта фотографии
-const createThumbnail = (photo) => {
-  const {url, comments, likes} = photo;
-  const thumbnail = thumbnailTemplate.cloneNode(true);
-
+const createPicture = (picture) => {
+  const {url, comments, likes} = picture;
+  const thumbnail = pictureTemplate.cloneNode(true);
 
   thumbnail.querySelector('img').src = url;
   thumbnail.querySelector('.picture__comments').textContent = comments.length;
@@ -19,34 +18,45 @@ const createThumbnail = (photo) => {
   return thumbnail;
 };
 
-// Обработчик нажатия на клавишу ESC на оверлее просмотра большого изображения
+// Обработчик нажатия на клавишу ESC на попапе просмотра большого изображения
 const onModalEscKeydown = (evt) => {
   if (isEscKey(evt)){
     evt.preventDefault();
-    closePictureModal();
+
+    hideBigPicture();
   }
 };
 
-// Обработчик клика по кнопке закрытия оверлея просмотра большого изображения
-const onModalCloseButtonClick = (evt) => {
-  evt.preventDefault();
-  closePictureModal();
+// Обработчик клика по кнопке закрытия попапа просмотра большого изображения
+const onModalCloseButtonClick = () => {
+  hideBigPicture();
 };
 
 // Функция создания одной миниатюры
 const renderThumbnail = (photo) => {
-  const thumbnail = createThumbnail(photo);
+  const thumbnail = createPicture(photo);
 
   thumbnail.addEventListener('click', (evt) => {
     evt.preventDefault();
-    openPictureModal(photo);
+
+    showBigPicture(photo);
   });
 
   return thumbnail;
 };
 
+// Функция рендера миниатюр из объекта с данными
 const renderPictures = (photos) => {
-  thumbnailsContainer.append(...photos.map(renderThumbnail));
+  picturessContainer.append(...photos.map(renderThumbnail));
 };
 
-export { renderPictures, onModalCloseButtonClick, onModalEscKeydown };
+// Установка колбэка обработчика кнопки закрытия попапа большого изображения
+setBigPictureCloseButtonClickHandler(() => {
+  onModalCloseButtonClick();
+});
+// Установка колбэка обработчика нажатия ESC на попапе большого изображения
+setBigPictureEscKeydownHandler ((evt) => {
+  onModalEscKeydown(evt);
+});
+
+export { renderPictures };
