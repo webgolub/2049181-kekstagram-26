@@ -1,5 +1,10 @@
 import { isEscKey } from './util.js';
-import { showBigPicture, hideBigPicture, setBigPictureCloseButtonClickHandler, setBigPictureEscKeydownHandler } from './big-picture.js';
+import {
+  showBigPicture,
+  hideBigPicture,
+  setBigPictureCloseButtonClickHandler,
+  setBigPictureEscKeydownHandler
+} from './big-picture.js';
 
 
 // Контейнер для миниатюр
@@ -21,7 +26,7 @@ const createPicture = (picture) => {
 };
 
 // Обработчик нажатия на клавишу ESC на попапе просмотра большого изображения
-const onModalEscKeydown = (evt) => {
+const ModalEscKeydownHandler = (evt) => {
   if (isEscKey(evt)){
     evt.preventDefault();
 
@@ -30,7 +35,7 @@ const onModalEscKeydown = (evt) => {
 };
 
 // Обработчик клика по кнопке закрытия попапа просмотра большого изображения
-const onModalCloseButtonClick = () => {
+const ModalCloseButtonClickHandler = () => {
   hideBigPicture();
 };
 
@@ -54,11 +59,11 @@ const renderPictures = (photos) => {
 
 // Установка колбэка обработчика кнопки закрытия попапа большого изображения
 setBigPictureCloseButtonClickHandler(() => {
-  onModalCloseButtonClick();
+  ModalCloseButtonClickHandler();
 });
 // Установка колбэка обработчика нажатия ESC на попапе большого изображения
 setBigPictureEscKeydownHandler ((evt) => {
-  onModalEscKeydown(evt);
+  ModalEscKeydownHandler(evt);
 });
 
 export { renderPictures };

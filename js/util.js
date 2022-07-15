@@ -9,16 +9,15 @@ const isArrayUnique = (items) => !items.some((item, index) => items.indexOf(item
 // Функция вывода пользователю сообщещния об ошибке
 const showAlert = (text) => {
   const alertContainer = document.createElement('div');
-  alertContainer.style.position = 'absolute';
-  alertContainer.style.zIndex = '100';
-  alertContainer.style.top = '0';
-  alertContainer.style.right = '0';
-  alertContainer.style.left = '0';
-  alertContainer.style.backgroundColor = 'rgb(255,77,77)';
-  alertContainer.style.textAlign = 'center';
+  alertContainer.classList.add('alert');
   alertContainer.textContent = text;
   document.body.append(alertContainer);
   setTimeout(() => alertContainer.remove(), ALERT_SHOW_TIME);
 };
 
-export { checkTextLength, isEscKey, isArrayUnique, showAlert };
+export {
+  checkTextLength,
+  isEscKey,
+  isArrayUnique,
+  showAlert
+};

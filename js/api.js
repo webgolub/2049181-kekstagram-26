@@ -1,29 +1,22 @@
-import { showAlert } from './util.js';
-// const getData = (onSuccess) => {
-//   fetch('https://26.javascript.pages.academy/kekstagram/data')
-//     .then((data) => data.json())
-//     .then((photos) => onSuccess(photos))
-//     .catch(() => {
-//       showAlert('Данные с сервера не получены. Попробуйте обновить страницу');
-//     });
-// };
+const GET_DATA_URL = 'https://26.javascript.pages.academy/kekstagram/data';
+const SEND_DATA_URL = 'https://26.javascript.pages.academy/kekstagram';
 
-const getData = async (onSuccess) => {
+const getData = async (onSuccess, onFail) => {
   try {
-    const response = await fetch('https://26.javascript.pages.academy/kekstagram/data');
+    const response = await fetch(GET_DATA_URL);
     const data = await response.json();
     if (!response.ok) {
-      throw new Error (`${response.status} - ${response.statusText}`);
+      onFail();
     }
     onSuccess(data);
   } catch (err) {
-    showAlert('Данные с сервера не получены. Попробуйте обновить страницу');
+    onFail();
   }
 };
 
 const sendData = async (onSuccess, onFail, body) => {
   try {
-    const response = await fetch('https://26.javascript.pages.academy/kekstagram', {
+    const response = await fetch(SEND_DATA_URL, {
       method: 'POST',
       body,
     });
@@ -36,21 +29,5 @@ const sendData = async (onSuccess, onFail, body) => {
     onFail();
   }
 };
-// const sendData = (onSuccess, onFail, body) => {
-//   fetch('https://26.javascript.pages.academy/kekstagram', {
-//     method: 'POST',
-//     body,
-//   })
-//     .then ((response) => {
-//       if(response.ok) {
-//         onSuccess();
-//       } else {
-//         onFail('Не удалось отправить форму. Попробуйте ещё раз');
-//       }
-//     })
-//     .catch(() => {
-//       onFail('Не удалось отправить форму. Попробуйте ещё раз');
-//     });
-// };
 
-export {getData, sendData};
+export { getData, sendData };

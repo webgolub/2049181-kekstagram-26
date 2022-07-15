@@ -56,4 +56,4 @@ pristine.addValidator(hashtagsInput, (value) => value === '' || parseHashtagsInp
 
 const validate = () => pristine.validate();
 
-export {validate};
+export { validate };

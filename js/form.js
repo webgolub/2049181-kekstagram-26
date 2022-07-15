@@ -3,7 +3,15 @@ import { resetScale, setScaleChangeHandler } from './scale.js';
 import { resetEffects } from './effects.js';
 import { validate } from './validate.js';
 import { sendData } from './api.js';
-import { showSuccessUploadModal, closeSuccessUploadModal, setModalCloseButtonClickHandler, setModalWindowEscKeydownHandler, setModalWindowWrapperClickHandler, showFailUploadModal, closeFailUploadModal} from './window.js';
+import {
+  showSuccessUploadModal,
+  closeSuccessUploadModal,
+  setModalCloseButtonClickHandler,
+  setModalWindowEscKeydownHandler,
+  setModalWindowWrapperClickHandler,
+  showFailUploadModal,
+  closeFailUploadModal
+} from './window.js';
 
 // Значения атрибута name для текстовых полей
 const TEXT_FIELD_NAMES = ['hashtags', 'description'];
@@ -37,10 +45,12 @@ setModalCloseButtonClickHandler ((evt) => {
 
 // Установка колбэка для обработчика нажатия ESC на окне информации о статусе загрузки данных
 setModalWindowEscKeydownHandler ((evt) => {
-  if (isEscKey(evt) & (document.body.lastChild.matches('.success'))) {
-    closeSuccessUploadModal();
-  } else if (isEscKey(evt)) {
-    closeFailUploadModal();
+  if (isEscKey(evt)) {
+    if ((document.querySelector('.success'))) {
+      closeSuccessUploadModal();
+    } else {
+      closeFailUploadModal();
+    }
   }
 });
 
@@ -64,16 +74,16 @@ const resetUploadPicture = () => {
 };
 
 // Обработчик клика по кнопке закрытия оверлея редактирования загружаемого изображения
-const onImgUploadOverlayCancelButtonClick = (evt) => {
+const ImgUploadOverlayCancelButtonClickHandler = (evt) => {
   evt.preventDefault();
   resetUploadPicture();
   closeUploadOverlay();
 };
 
 // Обработчик нажатия на клавишу ESC на оверлее редактирования загружаемого изображения
-const onImgUploadOverlayEscKeydown = (evt) => {
-  const sendStatusWindow = document.querySelector('.error');
-  if (isEscKey(evt) && isNotTextFields(evt) && !sendStatusWindow) {
+const ImgUploadOverlayEscKeydownHandler = (evt) => {
+  const IsSendStatusWindowOpened = document.querySelector('.error');
+  if (isEscKey(evt) && isNotTextFields(evt) && !IsSendStatusWindowOpened) {
     evt.preventDefault();
     resetUploadPicture();
     closeUploadOverlay();
@@ -87,8 +97,8 @@ function closeUploadOverlay () {
   document.body.classList.remove('modal-open');
 
   uploadForm.reset();
-  document.removeEventListener('keydown', onImgUploadOverlayEscKeydown);
-  imgUploadOverlayCancellButton.removeEventListener('click', onImgUploadOverlayCancelButtonClick);
+  document.removeEventListener('keydown', ImgUploadOverlayEscKeydownHandler);
+  imgUploadOverlayCancellButton.removeEventListener('click', ImgUploadOverlayCancelButtonClickHandler);
 }
 
 // Событие изменения поля загрузки изображения
@@ -97,8 +107,8 @@ uploadFileInput.addEventListener('change', () => {
   document.body.classList.add('modal-open');
   resetUploadPicture();
 
-  document.addEventListener('keydown', onImgUploadOverlayEscKeydown);
-  imgUploadOverlayCancellButton.addEventListener('click', onImgUploadOverlayCancelButtonClick);
+  document.addEventListener('keydown', ImgUploadOverlayEscKeydownHandler);
+  imgUploadOverlayCancellButton.addEventListener('click', ImgUploadOverlayCancelButtonClickHandler);
 });
 
 // Функция блокирования кнопки отправки формы

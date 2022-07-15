@@ -84,4 +84,12 @@ const closeFailUploadModal = () => {
   createOrRemoveWindowWrapperClickHandler('fail','remove');
   failUploadModal.remove();
 };
-export { showSuccessUploadModal, closeSuccessUploadModal, setModalCloseButtonClickHandler, setModalWindowEscKeydownHandler, setModalWindowWrapperClickHandler, showFailUploadModal, closeFailUploadModal };
+export {
+  showSuccessUploadModal,
+  closeSuccessUploadModal,
+  showFailUploadModal,
+  closeFailUploadModal,
+  setModalCloseButtonClickHandler,
+  setModalWindowEscKeydownHandler,
+  setModalWindowWrapperClickHandler
+};

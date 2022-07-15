@@ -145,4 +145,4 @@ sliderContainer.noUiSlider.on('update', () => {
 // Слушатель изменения блока радиокнопок выбора эффекта
 effectsRadioContainer.addEventListener('change', (evt) => renderEffect(evt));
 
-export {resetEffects};
+export { resetEffects };

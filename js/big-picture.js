@@ -19,18 +19,18 @@ const modalSocialCommentsCount = modalWindow.querySelector('.social__comment-cou
 // Кнопка загрузки новой порции комментариев
 const modalCommentsLoaderButton = modalWindow.querySelector('.comments-loader');
 // Колбэк обработчика кнопки закрытия попапа большого изображения
-let bigPictureCloseButtonClickHandler = null;
+let BigPictureCloseButtonClickHandler = null;
 // Колбэк обработчика нажатия ESC на попапе большого изображения
-let bigPictureEscKeydownHandler = null;
+let BigPictureEscKeydownHandler = null;
 
 // Функция получения колбэка обработчика кнопки закрытия попапа большого изображения
 const setBigPictureCloseButtonClickHandler = (callback) => {
-  bigPictureCloseButtonClickHandler = callback;
+  BigPictureCloseButtonClickHandler = callback;
 };
 
 // Функция получения колбэка обработчика нажатия ESC на попапе большого изображения
 const setBigPictureEscKeydownHandler = (callback) => {
-  bigPictureEscKeydownHandler = callback;
+  BigPictureEscKeydownHandler = callback;
 };
 
 // Функция создания DOM-узла комментария
@@ -62,8 +62,8 @@ const showBigPicture = (photo) => {
   modalWindow.classList.remove('hidden');
   document.body.classList.add('modal-open');
   // 2. Добавить обработчики для закрытия
-  modalCloseButton.addEventListener('click', bigPictureCloseButtonClickHandler);
-  document.addEventListener('keydown', bigPictureEscKeydownHandler);
+  modalCloseButton.addEventListener('click', BigPictureCloseButtonClickHandler);
+  document.addEventListener('keydown', BigPictureEscKeydownHandler);
 };
 
 // Функция закрытия модального окна
@@ -72,8 +72,13 @@ const hideBigPicture = () => {
   modalWindow.classList.add('hidden');
   document.body.classList.remove('modal-open');
   // 2. Удалить обработчики для закрытия
-  modalCloseButton.removeEventListener('click', bigPictureCloseButtonClickHandler);
-  document.removeEventListener('keydown', bigPictureEscKeydownHandler);
+  modalCloseButton.removeEventListener('click', BigPictureCloseButtonClickHandler);
+  document.removeEventListener('keydown', BigPictureEscKeydownHandler);
 };
 
-export {showBigPicture, hideBigPicture, setBigPictureCloseButtonClickHandler, setBigPictureEscKeydownHandler };
+export {
+  showBigPicture,
+  hideBigPicture,
+  setBigPictureCloseButtonClickHandler,
+  setBigPictureEscKeydownHandler
+};
