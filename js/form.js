@@ -113,7 +113,6 @@ const unblockSubmitButton = () => {
   imgUploadOverlaySubmitButton.textContent = 'Опубликовать';
 };
 
-
 // Обработчик действия при отправке формы
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
@@ -139,7 +138,6 @@ uploadForm.addEventListener('submit', (evt) => {
     );
   }
 });
-
 
 /* Обработчик события изменения формы, чтобы при закрытии попапа
    очищались предупреждения от старых проверок */
