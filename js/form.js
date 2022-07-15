@@ -3,6 +3,7 @@ import { resetScale, setScaleChangeHandler } from './scale.js';
 import { resetEffects } from './effects.js';
 import { validate } from './validate.js';
 import { sendData } from './api.js';
+import { showSuccessUploadModal, closeSuccessUploadModal, setModalCloseButtonClickHandler, setModalWindowEscKeydownHandler, setModalWindowWrapperClickHandler, showFailUploadModal, closeFailUploadModal} from './window.js';
 
 // Значения атрибута name для текстовых полей
 const TEXT_FIELD_NAMES = ['hashtags', 'description'];
@@ -18,23 +19,49 @@ const imgUploadOverlayCancellButton = uploadForm.querySelector('#upload-cancel')
 const imgPreview = uploadForm.querySelector('.img-upload__preview img');
 // Кнопка отправки формы
 const imgUploadOverlaySubmitButton =  uploadForm.querySelector('.img-upload__submit');
-// Шаблон сообщения об успешной отправке
-const successUploadTemplate = document.querySelector('#success').content.querySelector('.success');
-// Шаблон сообщения об ошибке при отправке
-const errorUploadTemplate = document.querySelector('#error').content;
+
+
+// Функция установки коллбэка для функции отрисовки изменения масштаба изображения
+setScaleChangeHandler((value) => {
+  imgPreview.style.transform = `scale(${value / 100 })`;
+});
+
+// Установка колбэка для обработчика клика по кнопке закрытия окна информации о статусе загрузки данных
+setModalCloseButtonClickHandler ((evt) => {
+  if (evt.target.className === 'success__button') {
+    closeSuccessUploadModal();
+  } else {
+    closeFailUploadModal();
+  }
+});
+
+// Установка колбэка для обработчика нажатия ESC на окне информации о статусе загрузки данных
+setModalWindowEscKeydownHandler ((evt) => {
+  if (isEscKey(evt) & (document.body.lastChild.matches('.success'))) {
+    closeSuccessUploadModal();
+  } else if (isEscKey(evt)) {
+    closeFailUploadModal();
+  }
+});
+
+// Установка колбэка для обработчика клика по обёртке окна о статусе загрузки данных
+setModalWindowWrapperClickHandler ((evt) => {
+  if (evt.target.className === 'success') {
+    closeSuccessUploadModal();
+  } else if (evt.target.className === 'error') {
+    closeFailUploadModal();
+  }
+});
 
 // Проверка что фокус не на текстовых полях
 const isNotTextFields = (evt) => ! TEXT_FIELD_NAMES.includes(evt.target.name);
+
 
 // Функция сброса превью загружаемого изображения
 const resetUploadPicture = () => {
   resetScale();
   resetEffects();
 };
-// Функция установки коллбэка для функции отрисовки изменения масштаба изображения
-setScaleChangeHandler((value) => {
-  imgPreview.style.transform = `scale(${value / 100 })`;
-});
 
 // Обработчик клика по кнопке закрытия оверлея редактирования загружаемого изображения
 const onImgUploadOverlayCancelButtonClick = (evt) => {
@@ -45,7 +72,8 @@ const onImgUploadOverlayCancelButtonClick = (evt) => {
 
 // Обработчик нажатия на клавишу ESC на оверлее редактирования загружаемого изображения
 const onImgUploadOverlayEscKeydown = (evt) => {
-  if (isEscKey(evt) && isNotTextFields(evt)) {
+  const sendStatusWindow = document.querySelector('.error');
+  if (isEscKey(evt) && isNotTextFields(evt) && !sendStatusWindow) {
     evt.preventDefault();
     resetUploadPicture();
     closeUploadOverlay();
@@ -73,26 +101,18 @@ uploadFileInput.addEventListener('change', () => {
   imgUploadOverlayCancellButton.addEventListener('click', onImgUploadOverlayCancelButtonClick);
 });
 
+// Функция блокирования кнопки отправки формы
 const blockSubmitButton = () => {
   imgUploadOverlaySubmitButton.disabled = true;
   imgUploadOverlaySubmitButton.textContent = 'Публикую...';
 };
 
+// Функция разблокирования кнопки отправки формы
 const unblockSubmitButton = () => {
   imgUploadOverlaySubmitButton.disabled = false;
   imgUploadOverlaySubmitButton.textContent = 'Опубликовать';
 };
 
-// Функция показа окна об успешной загрузке данных
-const showSuccessUploadModal = () => {
-  const modal = successUploadTemplate.cloneNode(true);
-  modal.querySelector('.success__button').addEventListener('click', () => {
-    resetUploadPicture();
-    closeUploadOverlay();
-    modal.remove();
-  });
-  document.body.append(modal);
-};
 
 // Обработчик действия при отправке формы
 uploadForm.addEventListener('submit', (evt) => {
@@ -108,11 +128,11 @@ uploadForm.addEventListener('submit', (evt) => {
       closeUploadOverlay();
       uploadForm.reset();
       showSuccessUploadModal();
-
     },
     () => {
     // OnFail
-
+      unblockSubmitButton();
+      showFailUploadModal();
     },
     //body
     new FormData(uploadForm)
@@ -121,7 +141,7 @@ uploadForm.addEventListener('submit', (evt) => {
 });
 
 
-/* Обработчик события изменения формы чтобы при закрытии попапа
+/* Обработчик события изменения формы, чтобы при закрытии попапа
    очищались предупреждения от старых проверок */
 uploadForm.addEventListener('change', () => {
   validate();

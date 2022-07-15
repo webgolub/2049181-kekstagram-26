@@ -1,10 +1,12 @@
 import { isEscKey } from './util.js';
 import { showBigPicture, hideBigPicture, setBigPictureCloseButtonClickHandler, setBigPictureEscKeydownHandler } from './big-picture.js';
 
+
 // Контейнер для миниатюр
 const picturessContainer = document.querySelector('.pictures');
 // Шаблон миниатюры
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+
 
 // Создание узла миниатюры из объекта фотографии
 const createPicture = (picture) => {
