@@ -22,7 +22,6 @@ const sendData = async (onSuccess, onFail, body) => {
     });
     if (!response.ok) {
       onFail();
-      throw new Error (`${response.status} - ${response.statusText}`);
     }
     onSuccess();
   } catch (err) {

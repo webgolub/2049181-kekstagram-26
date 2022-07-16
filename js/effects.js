@@ -63,11 +63,11 @@ const renderEffectIntensity = () => {
 // Функция создания объекта настроек слайдера
 const createOptions = ({min, max, step}) => ({
   range: {
-    min: min,
-    max: max,
+    min,
+    max,
   },
   start: max,
-  step: step,
+  step,
 });
 
 // Функция, обновляющая параметры слайдера согласно выбранной радиокнопки
@@ -104,13 +104,13 @@ const updateSliderOptions = () => {
 };
 
 // Функция удаления классов эффектов
-const removeEffectsClasses = () => {
+const removeEffectClass = () => {
   imgPreview.classList.remove(`effects__preview--${currentEffect}`);
 };
 
 // Функция сборса эффектов
 const resetEffects = () => {
-  removeEffectsClasses ();
+  removeEffectClass ();
   currentEffect = Effect.NONE;
   updateSliderOptions();
   imgPreview.style.filter = '';
@@ -119,7 +119,7 @@ const resetEffects = () => {
 
 // Функция, добавляющая к превью изображения класс эффекта согласно выбранной радиокнопки
 const addEffectToImgPreview = () => {
-  removeEffectsClasses ();
+  removeEffectClass ();
 
   if (currentEffect !== Effect.NONE) {
     imgPreview.classList.add(`effects__preview--${currentEffect}`);
@@ -128,7 +128,7 @@ const addEffectToImgPreview = () => {
 
 // Рендер эффекта
 const renderEffect = (evt) => {
-  removeEffectsClasses ();
+  removeEffectClass ();
   currentEffect = evt.target.value;
   imgPreview.style.filter = '';
   addEffectToImgPreview(currentEffect);

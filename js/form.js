@@ -1,17 +1,9 @@
 import { isEscKey } from './util.js';
 import { resetScale, setScaleChangeHandler } from './scale.js';
 import { resetEffects } from './effects.js';
-import { validate } from './validate.js';
+import { validateUploadForm } from './validate.js';
 import { sendData } from './api.js';
-import {
-  showSuccessUploadModal,
-  closeSuccessUploadModal,
-  setModalCloseButtonClickHandler,
-  setModalWindowEscKeydownHandler,
-  setModalWindowWrapperClickHandler,
-  showFailUploadModal,
-  closeFailUploadModal
-} from './window.js';
+import { showSuccessUploadModal, showFailUploadModal } from './window.js';
 
 // Значения атрибута name для текстовых полей
 const TEXT_FIELD_NAMES = ['hashtags', 'description'];
@@ -34,35 +26,6 @@ setScaleChangeHandler((value) => {
   imgPreview.style.transform = `scale(${value / 100 })`;
 });
 
-// Установка колбэка для обработчика клика по кнопке закрытия окна информации о статусе загрузки данных
-setModalCloseButtonClickHandler ((evt) => {
-  if (evt.target.className === 'success__button') {
-    closeSuccessUploadModal();
-  } else {
-    closeFailUploadModal();
-  }
-});
-
-// Установка колбэка для обработчика нажатия ESC на окне информации о статусе загрузки данных
-setModalWindowEscKeydownHandler ((evt) => {
-  if (isEscKey(evt)) {
-    if ((document.querySelector('.success'))) {
-      closeSuccessUploadModal();
-    } else {
-      closeFailUploadModal();
-    }
-  }
-});
-
-// Установка колбэка для обработчика клика по обёртке окна о статусе загрузки данных
-setModalWindowWrapperClickHandler ((evt) => {
-  if (evt.target.className === 'success') {
-    closeSuccessUploadModal();
-  } else if (evt.target.className === 'error') {
-    closeFailUploadModal();
-  }
-});
-
 // Проверка что фокус не на текстовых полях
 const isNotTextFields = (evt) => ! TEXT_FIELD_NAMES.includes(evt.target.name);
 
@@ -74,16 +37,16 @@ const resetUploadPicture = () => {
 };
 
 // Обработчик клика по кнопке закрытия оверлея редактирования загружаемого изображения
-const ImgUploadOverlayCancelButtonClickHandler = (evt) => {
+const imgUploadOverlayCancelButtonClickHandler = (evt) => {
   evt.preventDefault();
   resetUploadPicture();
   closeUploadOverlay();
 };
 
 // Обработчик нажатия на клавишу ESC на оверлее редактирования загружаемого изображения
-const ImgUploadOverlayEscKeydownHandler = (evt) => {
-  const IsSendStatusWindowOpened = document.querySelector('.error');
-  if (isEscKey(evt) && isNotTextFields(evt) && !IsSendStatusWindowOpened) {
+const imgUploadOverlayEscKeydownHandler = (evt) => {
+  const isSendStatusWindowOpened = document.querySelector('.error');
+  if (isEscKey(evt) && isNotTextFields(evt) && !isSendStatusWindowOpened) {
     evt.preventDefault();
     resetUploadPicture();
     closeUploadOverlay();
@@ -97,8 +60,8 @@ function closeUploadOverlay () {
   document.body.classList.remove('modal-open');
 
   uploadForm.reset();
-  document.removeEventListener('keydown', ImgUploadOverlayEscKeydownHandler);
-  imgUploadOverlayCancellButton.removeEventListener('click', ImgUploadOverlayCancelButtonClickHandler);
+  document.removeEventListener('keydown', imgUploadOverlayEscKeydownHandler);
+  imgUploadOverlayCancellButton.removeEventListener('click', imgUploadOverlayCancelButtonClickHandler);
 }
 
 // Событие изменения поля загрузки изображения
@@ -107,8 +70,8 @@ uploadFileInput.addEventListener('change', () => {
   document.body.classList.add('modal-open');
   resetUploadPicture();
 
-  document.addEventListener('keydown', ImgUploadOverlayEscKeydownHandler);
-  imgUploadOverlayCancellButton.addEventListener('click', ImgUploadOverlayCancelButtonClickHandler);
+  document.addEventListener('keydown', imgUploadOverlayEscKeydownHandler);
+  imgUploadOverlayCancellButton.addEventListener('click', imgUploadOverlayCancelButtonClickHandler);
 });
 
 // Функция блокирования кнопки отправки формы
@@ -127,7 +90,7 @@ const unblockSubmitButton = () => {
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
 
-  const isValid = validate();
+  const isValid = validateUploadForm();
   if(isValid) {
     blockSubmitButton();
     sendData(() => {
@@ -152,5 +115,5 @@ uploadForm.addEventListener('submit', (evt) => {
 /* Обработчик события изменения формы, чтобы при закрытии попапа
    очищались предупреждения от старых проверок */
 uploadForm.addEventListener('change', () => {
-  validate();
+  validateUploadForm();
 });

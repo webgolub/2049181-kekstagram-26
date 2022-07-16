@@ -1,3 +1,5 @@
+import { isEscKey } from './util.js';
+
 // Шаблон попапа об успешной отправке
 const successUploadModal = document.querySelector('#success').content.querySelector('.success');
 // Кнопка закрытия попапа об успешной отправке данных
@@ -7,46 +9,30 @@ const failUploadModal = document.querySelector('#error').content.querySelector('
 // Кнопка закрытия попапа об ошибке при отправке
 const failUploadTemplateCloseButton = failUploadModal.querySelector('.error__button');
 
-// Колбэк для обработчика клика по кнопке закрытия окна о статусе загрузки данных
-let onModalWindowCloseButtonClick = null;
-// Колбэк для обработчика нажатия ESC на окне о статусе загрузки данных
-let onModalWindowEscKeydown  = null;
-// Колбэк для обработчика клика по зоне вокруг окна о статусе загрузки данных
-let onModalWindowWrapperClick = null;
-
-// Установка колбэка для обработчика клика по кнопке закрытия окна о статусе загрузки данных
-const setModalCloseButtonClickHandler = (callback) => {
-  onModalWindowCloseButtonClick = callback;
+// Обработчик клика по кнопке закрытия окна о статусе загрузки данных
+const modalWindowCloseButtonClickHandler = (evt) => {
+  if (evt.target.className === 'success__button') {
+    closeSuccessUploadModal();
+  } else {
+    closeFailUploadModal();
+  }
 };
-
-// Установка колбэка для обработчика клика по зоне вокруг окна о статусе загрузки данных
-const setModalWindowWrapperClickHandler = (callback) => {
-  onModalWindowWrapperClick = callback;
-};
-
-// Установка колбэка для обработчика нажатия ESC на окне о статусе загрузки данных
-const setModalWindowEscKeydownHandler = (callback) => {
-  onModalWindowEscKeydown = callback;
-};
-
-// Функция создания или удаления обработчика события клика по обёртке окна о статусе загрузки данных
-const createOrRemoveWindowWrapperClickHandler = (success, action) => {
-  if (success === 'success') {
-    const windowSuccessWrapper = document.querySelector('.success');
-
-    if (action === 'remove') {
-      windowSuccessWrapper.removeEventListener('click', onModalWindowWrapperClick);
+// Обработчик нажатия ESC на окне о статусе загрузки данных
+const modalWindowEscKeydownHandler  = (evt) => {
+  if (isEscKey(evt)) {
+    if ((document.querySelector('.success'))) {
+      closeSuccessUploadModal();
     } else {
-      windowSuccessWrapper.addEventListener('click', onModalWindowWrapperClick);
+      closeFailUploadModal();
     }
-  } else if (success === 'fail') {
-    const windowFailWrapper = document.querySelector('.error');
-
-    if (action === 'remove') {
-      windowFailWrapper.removeEventListener('click', onModalWindowWrapperClick);
-    } else {
-      windowFailWrapper.addEventListener('click', onModalWindowWrapperClick);
-    }
+  }
+};
+// Обработчик клика по зоне вокруг окна о статусе загрузки данных
+const modalWindowWrapperClickHandler = (evt) => {
+  if (evt.target.className === 'success') {
+    closeSuccessUploadModal();
+  } else if (evt.target.className === 'error') {
+    closeFailUploadModal();
   }
 };
 
@@ -54,42 +40,38 @@ const createOrRemoveWindowWrapperClickHandler = (success, action) => {
 const showSuccessUploadModal = () => {
   document.body.append(successUploadModal);
   document.body.classList.add('modal-open');
-  successUploadTemplateCloseButton.addEventListener('click', onModalWindowCloseButtonClick);
-  document.addEventListener('keydown', onModalWindowEscKeydown);
-  createOrRemoveWindowWrapperClickHandler('success');
+  successUploadTemplateCloseButton.addEventListener('click', modalWindowCloseButtonClickHandler);
+  document.addEventListener('keydown', modalWindowEscKeydownHandler);
+  const windowSuccessWrapper = document.querySelector('.success');
+  windowSuccessWrapper.addEventListener('click', modalWindowWrapperClickHandler);
 };
 
 // Функция закрытия окна об успешной загрузке данных
-const closeSuccessUploadModal = () => {
+function closeSuccessUploadModal () {
   document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onModalWindowEscKeydown);
-  successUploadTemplateCloseButton.removeEventListener('click', onModalWindowCloseButtonClick);
-  createOrRemoveWindowWrapperClickHandler('success', 'remove');
+  document.removeEventListener('keydown', modalWindowEscKeydownHandler);
   successUploadModal.remove();
-};
+}
 
 // Функция показа окна о неудачной загрузке данных
 const showFailUploadModal = () => {
   document.body.append(failUploadModal);
-  document.addEventListener('keydown', onModalWindowEscKeydown);
-  failUploadTemplateCloseButton.addEventListener('click', onModalWindowCloseButtonClick);
-  createOrRemoveWindowWrapperClickHandler('fail');
+  document.addEventListener('keydown', modalWindowEscKeydownHandler);
+  failUploadTemplateCloseButton.addEventListener('click', modalWindowCloseButtonClickHandler);
+  const windowFailWrapper = document.querySelector('.error');
+  windowFailWrapper.addEventListener('click', modalWindowWrapperClickHandler);
 
 };
 
 // Функция закрытия окна о неудачной загрузке данных
-const closeFailUploadModal = () => {
-  document.removeEventListener('keydown', onModalWindowEscKeydown);
-  failUploadTemplateCloseButton.removeEventListener('click', onModalWindowCloseButtonClick);
-  createOrRemoveWindowWrapperClickHandler('fail','remove');
+function  closeFailUploadModal () {
+  document.removeEventListener('keydown', modalWindowEscKeydownHandler);
   failUploadModal.remove();
-};
+}
+
 export {
   showSuccessUploadModal,
   closeSuccessUploadModal,
   showFailUploadModal,
-  closeFailUploadModal,
-  setModalCloseButtonClickHandler,
-  setModalWindowEscKeydownHandler,
-  setModalWindowWrapperClickHandler
+  closeFailUploadModal
 };

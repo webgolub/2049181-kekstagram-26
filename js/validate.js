@@ -54,6 +54,6 @@ pristine.addValidator(hashtagsInput, (value) => value === '' || parseHashtagsInp
 pristine.addValidator(hashtagsInput, (value) => value === '' || parseHashtagsInput(value).every((hashtag) => hashtag.length >= HashtagLength.MIN && hashtag.length <= HashtagLength.MAX),
   'Длина хэштега — от 1 до 19 символов после #');
 
-const validate = () => pristine.validate();
+const validateUploadForm = () => pristine.validate();
 
-export { validate };
+export { validateUploadForm };
