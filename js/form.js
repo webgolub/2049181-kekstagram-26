@@ -45,11 +45,13 @@ const imgUploadOverlayCancelButtonClickHandler = (evt) => {
 
 // Обработчик нажатия на клавишу ESC на оверлее редактирования загружаемого изображения
 const imgUploadOverlayEscKeydownHandler = (evt) => {
-  const isSendStatusWindowOpened = document.querySelector('.error');
-  if (isEscKey(evt) && isNotTextFields(evt) && !isSendStatusWindowOpened) {
-    evt.preventDefault();
-    resetUploadPicture();
-    closeUploadOverlay();
+  if (isEscKey(evt) && isNotTextFields(evt)) {
+    const isErrorWindowClosed = document.querySelector('.error') === null;
+    if (isErrorWindowClosed) {
+      evt.preventDefault();
+      resetUploadPicture();
+      closeUploadOverlay();
+    }
   }
 };
 
