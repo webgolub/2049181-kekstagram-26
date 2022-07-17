@@ -1,10 +1,11 @@
-import { renderThumbnails } from './render-thumbnails.js';
-import { createPhotos } from './data.js';
-import './editor.js';
-import './validate.js';
-
-// Создание массива объектов с «рыбой» фотографий
-const somePhotos = createPhotos(25);
+import { getData } from './api.js';
+import { renderPictures } from './picture.js';
+import { showAlert } from './util.js';
+import './form.js';
 
 // Отрисовка миниатюр
-renderThumbnails(somePhotos);
+getData(renderPictures,
+  () => {
+    showAlert('Данные с сервера не получены. Попробуйте обновить страницу');
+  }
+);

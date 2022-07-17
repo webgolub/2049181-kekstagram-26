@@ -1,4 +1,4 @@
-const Effects = {
+const Effect = {
   NONE: 'none',
   CHROME: 'chrome',
   SEPIA: 'sepia',
@@ -18,7 +18,7 @@ const imgPreview = uploadForm.querySelector('.img-upload__preview img');
 // Поле уровня эффекта
 const effectLevelValue = uploadForm.querySelector('.effect-level__value');
 
-let currentEffect = Effects.NONE;
+let currentEffect = Effect.NONE;
 
 // Создание экземпляра слайдера
 noUiSlider.create(sliderContainer, {
@@ -34,100 +34,102 @@ noUiSlider.create(sliderContainer, {
 // Функция, добавляющая CSS-стили согласно заданному уровню эффекта
 const renderEffectIntensity = () => {
   switch (currentEffect) {
-    case Effects.NONE:
+    case Effect.NONE:
       imgPreview.style.filter = '';
       break;
 
-    case Effects.CHROME:
+    case Effect.CHROME:
       imgPreview.style.filter = `grayscale(${effectLevelValue.value})`;
       break;
 
-    case Effects.SEPIA:
+    case Effect.SEPIA:
       imgPreview.style.filter = `sepia(${effectLevelValue.value})`;
       break;
 
-    case Effects.MARVIN:
+    case Effect.MARVIN:
       imgPreview.style.filter = `invert(${effectLevelValue.value}%)`;
       break;
 
-    case Effects.PHOBOS:
+    case Effect.PHOBOS:
       imgPreview.style.filter = `blur(${effectLevelValue.value}px)`;
       break;
 
-    case Effects.HEAT:
+    case Effect.HEAT:
       imgPreview.style.filter = `brightness(${effectLevelValue.value})`;
       break;
   }
 };
 
+// Функция создания объекта настроек слайдера
+const createOptions = ({min, max, step}) => ({
+  range: {
+    min,
+    max,
+  },
+  start: max,
+  step,
+});
+
 // Функция, обновляющая параметры слайдера согласно выбранной радиокнопки
 const updateSliderOptions = () => {
   const slider = sliderContainer.noUiSlider;
-  const createOptionsObject = (min, max, step) => ({
-    range: {
-      min: min,
-      max: max,
-    },
-    start: max,
-    step: step,
-  });
 
   switch (currentEffect) {
-    case Effects.NONE:
+    case Effect.NONE:
       sliderContainer.parentElement.classList.add('hidden');
-      slider.updateOptions(createOptionsObject(0, 100, 1));
+      slider.updateOptions(createOptions({min: 0, max: 100, step: 1}));
       break;
 
-    case Effects.CHROME:
-    case Effects.SEPIA:
+    case Effect.CHROME:
+    case Effect.SEPIA:
       sliderContainer.parentElement.classList.remove('hidden');
-      slider.updateOptions(createOptionsObject(0, 1, 0.1));
+      slider.updateOptions(createOptions({min: 0, max: 1, step: 0.1}));
       break;
 
-    case Effects.MARVIN:
+    case Effect.MARVIN:
       sliderContainer.parentElement.classList.remove('hidden');
-      slider.updateOptions(createOptionsObject(0, 100, 1));
+      slider.updateOptions(createOptions({min: 0, max: 100, step: 1}));
       break;
 
-    case Effects.PHOBOS:
+    case Effect.PHOBOS:
       sliderContainer.parentElement.classList.remove('hidden');
-      slider.updateOptions(createOptionsObject(0, 3, 0.1));
+      slider.updateOptions(createOptions({min: 0, max: 3, step: 0.1}));
       break;
 
-    case Effects.HEAT:
+    case Effect.HEAT:
       sliderContainer.parentElement.classList.remove('hidden');
-      slider.updateOptions(createOptionsObject(1, 3, 0.1));
+      slider.updateOptions(createOptions({min: 1, max: 3, step: 0.1}));
       break;
   }
 };
 
 // Функция удаления классов эффектов
-const removeEffectsClasses = (element) => {
-  element.className.split(' ').forEach((item) => {
-    if(/effects__preview--/.test(item)) {element.classList.remove(item);} });
+const removeEffectClass = () => {
+  imgPreview.classList.remove(`effects__preview--${currentEffect}`);
 };
+
 // Функция сборса эффектов
 const resetEffects = () => {
-  currentEffect = Effects.NONE;
+  removeEffectClass ();
+  currentEffect = Effect.NONE;
   updateSliderOptions();
-  removeEffectsClasses (imgPreview);
   imgPreview.style.filter = '';
 
 };
 
 // Функция, добавляющая к превью изображения класс эффекта согласно выбранной радиокнопки
 const addEffectToImgPreview = () => {
-  removeEffectsClasses (imgPreview);
+  removeEffectClass ();
 
-  if (currentEffect !== 'none') {
+  if (currentEffect !== Effect.NONE) {
     imgPreview.classList.add(`effects__preview--${currentEffect}`);
   }
 };
 
 // Рендер эффекта
 const renderEffect = (evt) => {
+  removeEffectClass ();
   currentEffect = evt.target.value;
-  removeEffectsClasses (imgPreview);
   imgPreview.style.filter = '';
   addEffectToImgPreview(currentEffect);
   updateSliderOptions(currentEffect);
@@ -143,4 +145,4 @@ sliderContainer.noUiSlider.on('update', () => {
 // Слушатель изменения блока радиокнопок выбора эффекта
 effectsRadioContainer.addEventListener('change', (evt) => renderEffect(evt));
 
-export {resetEffects};
+export { resetEffects };

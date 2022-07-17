@@ -1,4 +1,4 @@
-import {onModalEscKeydown, onModalCloseButtonClick} from './render-thumbnails.js';
+import { isEscKey } from './util.js';
 
 // Модальное окно просмотра большого изображения
 const modalWindow = document.querySelector('.big-picture');
@@ -20,6 +20,26 @@ const modalSocialCaption = modalWindow.querySelector('.social__caption');
 const modalSocialCommentsCount = modalWindow.querySelector('.social__comment-count');
 // Кнопка загрузки новой порции комментариев
 const modalCommentsLoaderButton = modalWindow.querySelector('.comments-loader');
+// Колбэк обработчика кнопки закрытия попапа большого изображения
+let bigPictureCloseButtonClickHandler = null;
+// Колбэк обработчика нажатия ESC на попапе большого изображения
+let bigPictureEscKeydownHandler = null;
+
+// Функция получения колбэка обработчика кнопки закрытия попапа большого изображения
+const setBigPictureCloseButtonClickHandler = (callback) => {
+  bigPictureCloseButtonClickHandler = callback;
+};
+
+// Функция получения колбэка обработчика нажатия ESC на попапе большого изображения
+const setBigPictureEscKeydownHandler = (callback) => {
+  bigPictureEscKeydownHandler = (evt) => {
+    if (isEscKey(evt)){
+      evt.preventDefault();
+
+      callback();
+    }
+  };
+};
 
 // Функция создания DOM-узла комментария
 const createComment = (comment) => {
@@ -44,24 +64,29 @@ const renderModalWindow = ({url, likes, comments, description}) => {
 };
 
 // Функция открытия модального окна
-const openPictureModal = (photo) => {
+const showBigPicture = (photo) => {
   // 1. Показать окно
   renderModalWindow(photo);
   modalWindow.classList.remove('hidden');
   document.body.classList.add('modal-open');
   // 2. Добавить обработчики для закрытия
-  modalCloseButton.addEventListener('click', onModalCloseButtonClick);
-  document.addEventListener('keydown', onModalEscKeydown);
+  modalCloseButton.addEventListener('click', bigPictureCloseButtonClickHandler);
+  document.addEventListener('keydown', bigPictureEscKeydownHandler);
 };
 
 // Функция закрытия модального окна
-const closePictureModal = () => {
+const hideBigPicture = () => {
   // 1. Скрыть окно
   modalWindow.classList.add('hidden');
   document.body.classList.remove('modal-open');
   // 2. Удалить обработчики для закрытия
-  modalCloseButton.removeEventListener('click', onModalCloseButtonClick);
-  document.removeEventListener('keydown', onModalEscKeydown);
+  modalCloseButton.removeEventListener('click', bigPictureCloseButtonClickHandler);
+  document.removeEventListener('keydown', bigPictureEscKeydownHandler);
 };
 
-export {openPictureModal, closePictureModal};
+export {
+  showBigPicture,
+  hideBigPicture,
+  setBigPictureCloseButtonClickHandler,
+  setBigPictureEscKeydownHandler
+};
