@@ -60,4 +60,4 @@ setBigPictureEscKeydownHandler (() => {
   hideBigPicture();
 });
 
-export { renderPictures, deleteRenderedPictures };
+export { renderPictures};
