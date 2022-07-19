@@ -1,4 +1,3 @@
-
 import {
   showBigPicture,
   hideBigPicture,
@@ -8,7 +7,7 @@ import {
 
 
 // Контейнер для миниатюр
-const picturessContainer = document.querySelector('.pictures');
+const picturesContainer = document.querySelector('.pictures');
 // Шаблон миниатюры
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
@@ -38,9 +37,17 @@ const renderThumbnail = (photo) => {
   return thumbnail;
 };
 
+const deleteRenderedPictures = () => {
+  const renderedPictures = document.querySelectorAll('.picture');
+  if (renderedPictures.length > 0) {
+    renderedPictures.forEach((picture) => picture.remove());
+  }
+};
+
 // Функция рендера миниатюр из объекта с данными
-const renderPictures = (photos) => {
-  picturessContainer.append(...photos.map(renderThumbnail));
+const renderPictures = (pictures) => {
+  deleteRenderedPictures();
+  picturesContainer.append(...pictures.map(renderThumbnail));
 };
 
 // Установка колбэка обработчика кнопки закрытия попапа большого изображения
@@ -53,4 +60,4 @@ setBigPictureEscKeydownHandler (() => {
   hideBigPicture();
 });
 
-export { renderPictures };
+export { renderPictures, deleteRenderedPictures };
