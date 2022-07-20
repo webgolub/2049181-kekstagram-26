@@ -17,6 +17,7 @@ const modalWindowCloseButtonClickHandler = (evt) => {
     closeFailUploadModal();
   }
 };
+
 // Обработчик нажатия ESC на окне о статусе загрузки данных
 const modalWindowEscKeydownHandler  = (evt) => {
   if (isEscKey(evt)) {
@@ -27,11 +28,18 @@ const modalWindowEscKeydownHandler  = (evt) => {
     }
   }
 };
-// Обработчик клика по зоне вокруг окна о статусе загрузки данных
-const modalWindowWrapperClickHandler = (evt) => {
-  if (evt.target.className === 'success') {
-    closeSuccessUploadModal();
-  } else if (evt.target.className === 'error') {
+
+// Обработчик клика по зоне вокруг окна об успешной отправке
+const successWindowWrapperClickHandler = (evt) => {
+  if (evt.target.className !== 'success__inner' &&
+      evt.target.className !== 'success__title') {
+    closeSuccessUploadModal();}
+};
+
+// Обработчик клика по зоне вокруг окна об ошибке при отправке
+const errorWindowWrapperClickHandler = (evt) => {
+  if (evt.target.className !== 'error__inner' &&
+      evt.target.className !== 'error__title') {
     closeFailUploadModal();
   }
 };
@@ -39,11 +47,9 @@ const modalWindowWrapperClickHandler = (evt) => {
 // Функция показа окна об успешной загрузке данных
 const showSuccessUploadModal = () => {
   document.body.append(successUploadModal);
-  document.body.classList.add('modal-open');
   successUploadTemplateCloseButton.addEventListener('click', modalWindowCloseButtonClickHandler);
   document.addEventListener('keydown', modalWindowEscKeydownHandler);
-  const windowSuccessWrapper = document.querySelector('.success');
-  windowSuccessWrapper.addEventListener('click', modalWindowWrapperClickHandler);
+  successUploadModal.addEventListener('click', successWindowWrapperClickHandler);
 };
 
 // Функция закрытия окна об успешной загрузке данных
@@ -58,8 +64,7 @@ const showFailUploadModal = () => {
   document.body.append(failUploadModal);
   document.addEventListener('keydown', modalWindowEscKeydownHandler);
   failUploadTemplateCloseButton.addEventListener('click', modalWindowCloseButtonClickHandler);
-  const windowFailWrapper = document.querySelector('.error');
-  windowFailWrapper.addEventListener('click', modalWindowWrapperClickHandler);
+  failUploadModal.addEventListener('click', errorWindowWrapperClickHandler);
 
 };
 
