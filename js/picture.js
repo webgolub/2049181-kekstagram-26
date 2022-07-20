@@ -1,3 +1,4 @@
+import { removeElement } from './util.js';
 import {
   showBigPicture,
   hideBigPicture,
@@ -37,16 +38,10 @@ const renderThumbnail = (photo) => {
   return thumbnail;
 };
 
-const deleteRenderedPictures = () => {
-  const renderedPictures = document.querySelectorAll('.picture');
-  if (renderedPictures.length > 0) {
-    renderedPictures.forEach((picture) => picture.remove());
-  }
-};
+const deleteRenderedPictures = () => document.querySelectorAll('.picture').forEach(removeElement);
 
 // Функция рендера миниатюр из объекта с данными
 const renderPictures = (pictures) => {
-  deleteRenderedPictures();
   picturesContainer.append(...pictures.map(renderThumbnail));
 };
 
@@ -60,4 +55,4 @@ setBigPictureEscKeydownHandler (() => {
   hideBigPicture();
 });
 
-export { renderPictures };
+export { renderPictures, deleteRenderedPictures };

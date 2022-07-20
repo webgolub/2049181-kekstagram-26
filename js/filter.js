@@ -1,52 +1,41 @@
+const Filter = {
+  DEFAULT: 'filter-default',
+  RANDOM: 'filter-random',
+  DISCUSSED: 'filter-discussed',
+};
 const RANDOM_PICTURES_COUNT = 10;
 const filtersSelector = document.querySelector('.img-filters');
-let selectedFilterButton = document.querySelector('#filter-default');
 let filterChangeCallback = null;
 
 const setFilterChangeHandler = (callback) => {
   filterChangeCallback = callback;
 };
 
+const showFiltersSelector = () => filtersSelector.classList.remove('img-filters--inactive');
+
 const filterButtonClickHandler = (evt) => {
-  switch (evt.target.id){
-    case 'filter-default':
-      if (selectedFilterButton.id !== 'filter-default'){
-        evt.target.classList.add('img-filters__button--active');
-        selectedFilterButton.classList.remove('img-filters__button--active');
-        selectedFilterButton = evt.target;
-      }
-      break;
-
-    case 'filter-random':
-      if (selectedFilterButton.id !== 'filter-random'){
-        evt.target.classList.add('img-filters__button--active');
-        selectedFilterButton.classList.remove('img-filters__button--active');
-        selectedFilterButton = evt.target;
-      }
-      break;
-
-    case 'filter-discussed':
-      if (selectedFilterButton.id !== 'filter-discussed'){
-        evt.target.classList.add('img-filters__button--active');
-        selectedFilterButton.classList.remove('img-filters__button--active');
-        selectedFilterButton = evt.target;
-      }
-      break;
+  if (!evt.target.classList.contains('img-filters')){
+    document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
+    evt.target.classList.add('img-filters__button--active');
+    if (!filtersSelector.classList.contains('img-filters--inactive')){
+      filterChangeCallback();
+    }
   }
-  filterChangeCallback();
 };
 
-
 const filterPictures = (pictures) => {
-  filtersSelector.classList.remove('img-filters--inactive');
   let filteredPictures = pictures;
 
-  switch (selectedFilterButton.id){
-    case 'filter-random':
+  switch (document.querySelector('.img-filters__button--active').id){
+    case Filter.DEFAULT:
+      filteredPictures = pictures.slice();
+      break;
+
+    case Filter.RANDOM:
       filteredPictures = pictures.slice().sort(() => 0.5 - Math.random()).slice(0, RANDOM_PICTURES_COUNT);
       break;
 
-    case 'filter-discussed':
+    case Filter.DISCUSSED:
       filteredPictures = pictures.slice().sort((pictureA, pictureB) =>
         pictureB.comments.length - pictureA.comments.length
       );
@@ -57,4 +46,4 @@ const filterPictures = (pictures) => {
 
 filtersSelector.addEventListener('click', filterButtonClickHandler);
 
-export { setFilterChangeHandler, filterPictures };
+export { setFilterChangeHandler, showFiltersSelector, filterPictures };
