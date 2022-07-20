@@ -38,7 +38,9 @@ const renderThumbnail = (photo) => {
   return thumbnail;
 };
 
-const deleteRenderedPictures = () => document.querySelectorAll('.picture').forEach(removeElement);
+const deleteRenderedPictures = () => {
+  document.querySelectorAll('.picture').forEach(removeElement);
+};
 
 // Функция рендера миниатюр из объекта с данными
 const renderPictures = (pictures) => {

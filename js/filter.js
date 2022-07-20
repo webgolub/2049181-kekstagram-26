@@ -11,7 +11,9 @@ const setFilterChangeHandler = (callback) => {
   filterChangeCallback = callback;
 };
 
-const showFiltersSelector = () => filtersSelector.classList.remove('img-filters--inactive');
+const showFiltersSelector = () => {
+  filtersSelector.classList.remove('img-filters--inactive');
+};
 
 const filterButtonClickHandler = (evt) => {
   if (!evt.target.classList.contains('img-filters')){

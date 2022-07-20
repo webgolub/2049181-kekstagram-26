@@ -26,7 +26,9 @@ const debounce = (callback, timeoutDelay = DEBOUNCE_DEFAULT_TIMEOUT) => {
   };
 };
 // Функция удаления элемента
-const removeElement = (element) => element.remove();
+const removeElement = (element) => {
+  element.remove();
+};
 
 export {
   checkTextLength,
