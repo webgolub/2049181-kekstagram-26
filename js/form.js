@@ -4,9 +4,8 @@ import { resetEffects } from './effects.js';
 import { validateUploadForm } from './validate.js';
 import { sendData } from './api.js';
 import { showSuccessUploadModal, showFailUploadModal } from './window.js';
+import { TEXT_FIELD_NAMES } from './const.js';
 
-// Значения атрибута name для текстовых полей
-const TEXT_FIELD_NAMES = ['hashtags', 'description'];
 // Форма загрузки изображения на сайт
 const uploadForm = document.querySelector('.img-upload__form');
 // Поле загрузки изображения

@@ -1,17 +1,22 @@
 import { getData } from './api.js';
-import { renderPictures, deleteRenderedPictures } from './picture.js';
 import { debounce, showAlert } from './util.js';
-import {filterPictures, showFiltersSelector, setFilterChangeHandler} from './filter.js';
+import { renderPictures, removePictures } from './picture.js';
+import { showFilters, setFilterChangeHandler} from './filter.js';
+import { filterPictures } from './filter-pictures.js';
 import './form.js';
+import { FilterType } from './const.js';
 
 // Отрисовка миниатюр
 getData((pictures) => {
-  showFiltersSelector();
+  showFilters();
   renderPictures(pictures);
   setFilterChangeHandler(
-    debounce(() => {
-      deleteRenderedPictures();
-      renderPictures(filterPictures(pictures));
+    debounce((filterType) => {
+      if (FilterType === FilterType.DEFAULT){
+        return;
+      }
+      removePictures();
+      renderPictures(filterPictures(pictures, filterType));
     },
     )
   );

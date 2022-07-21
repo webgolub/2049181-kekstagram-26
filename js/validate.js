@@ -1,14 +1,9 @@
 import { checkTextLength, isArrayUnique } from './util.js';
-
-// Максимальная длинна комментария
-const COMMENT_MAX_LENGTH = 140;
-// Максимальное количество хэштегов
-const MAX_HASHTAG = 5;
-// Длина хэштега
-const HashtagLength = {
-  MIN: 2,
-  MAX: 20
-};
+import {
+  COMMENT_MAX_LENGTH,
+  MAX_HASHTAG,
+  HashtagLength
+} from './const.js';
 
 // Форма загрузки изображения на сайт
 const uploadForm = document.querySelector('.img-upload__form');
