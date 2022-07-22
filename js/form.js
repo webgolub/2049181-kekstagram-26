@@ -10,12 +10,12 @@ const TEXT_FIELD_NAMES = ['hashtags', 'description'];
 const uploadForm = document.querySelector('.img-upload__form');
 // Поле загрузки изображения
 const uploadFileInput = uploadForm.querySelector('#upload-file');
+// Превью редактируемого изображения
+const imgPreview = uploadForm.querySelector('.img-upload__preview img');
 // Попап (форма) редактирования загружаемого изображения
 const imgUploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 // Кнопка закрытия оверлея
 const imgUploadOverlayCancellButton = uploadForm.querySelector('#upload-cancel');
-// Превью редактируемого изображения
-const imgPreview = uploadForm.querySelector('.img-upload__preview img');
 // Кнопка отправки формы
 const imgUploadOverlaySubmitButton =  uploadForm.querySelector('.img-upload__submit');
 
@@ -54,23 +54,30 @@ const imgUploadOverlayEscKeydownHandler = (evt) => {
   }
 };
 
+// Функция сброса состояния оверлея редактирования загружаемого изображения
+const resetUploadOverlay = () => {
+  uploadForm.reset();
+  resetUploadPicture();
+  URL.revokeObjectURL(imgPreview.src);
+  imgPreview.src ='';
+};
+
 // Функция закрытия оверлея редактирования загружаемого изображения
 function closeUploadOverlay () {
 
   imgUploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
-  uploadForm.reset();
-  imgPreview.src ='';
+  resetUploadOverlay();
   document.removeEventListener('keydown', imgUploadOverlayEscKeydownHandler);
   imgUploadOverlayCancellButton.removeEventListener('click', imgUploadOverlayCancelButtonClickHandler);
 }
 
+// Функция отрисовки превью выбранного изображения
 const renderPicturePreview = () => {
   const file = uploadFileInput.files[0];
-  const isFileTypeValid = checkFileTypeMatch(file.name);
 
-  if (isFileTypeValid) {
+  if (checkFileTypeMatch(file.name)) {
     imgPreview.src = URL.createObjectURL(file);
   }
 };
@@ -99,40 +106,36 @@ const unblockSubmitButton = () => {
   imgUploadOverlaySubmitButton.textContent = 'Опубликовать';
 };
 
-const resetUploadOverlay = () => {
-  uploadForm.reset();
-  resetUploadPicture();
-  URL.revokeObjectURL(imgPreview.src);
-  imgPreview.src ='';
-};
-
 // Обработчик действия при отправке формы
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  const file = uploadFileInput.files[0];
-  const isFormValid = validateUploadForm();
-  const isFileTypeValid = checkFileTypeMatch(file.name);
 
-  if(isFormValid && isFileTypeValid ) {
-    blockSubmitButton();
-    sendData(() => {
-      // OnSucsess
-      unblockSubmitButton();
-      closeUploadOverlay();
-      resetUploadOverlay();
-      showSuccessUploadModal();
-    },
-    () => {
-    // OnFail
-      unblockSubmitButton();
-      showFailUploadModal();
-    },
-    //body
-    new FormData(uploadForm)
-    );
-  }  else if (isFormValid) {
+  if (! checkFileTypeMatch(uploadFileInput.files[0].name)) {
     showAlert('Выбран неверный тип файла. Закройте форму и выберите изображение для загрузки.');
+    return;
   }
+
+  if(! validateUploadForm()) {
+    return;
+  }
+
+  blockSubmitButton();
+
+  sendData(() => {
+    // OnSucsess
+    unblockSubmitButton();
+    closeUploadOverlay();
+    showSuccessUploadModal();
+  },
+  () => {
+    // OnFail
+    unblockSubmitButton();
+    showFailUploadModal();
+  },
+  //body
+  new FormData(uploadForm)
+  );
+
 });
 
 
