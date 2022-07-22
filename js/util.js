@@ -1,6 +1,8 @@
-const ESCAPE_KEYS = ['Escape', 'Esc'];
-const ALERT_SHOW_TIME = 5000;
-const DEBOUNCE_DEFAULT_TIMEOUT = 500;
+import {
+  ESCAPE_KEYS,
+  ALERT_SHOW_TIME,
+  DEBOUNCE_DEFAULT_TIMEOUT
+} from './const.js';
 
 // Функция для проверки строки на максимальную длину
 const checkTextLength = (text, maxLength) => text.length <= maxLength;
@@ -17,12 +19,11 @@ const showAlert = (text) => {
   setTimeout(() => alertContainer.remove(), ALERT_SHOW_TIME);
 };
 // Функция взята из интернета и доработана
-// Источник - https://www.freecodecamp.org/news/javascript-debounce-example
 const debounce = (callback, timeoutDelay = DEBOUNCE_DEFAULT_TIMEOUT) => {
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(callback, timeoutDelay, rest);
+    timeoutId = setTimeout(callback, timeoutDelay, ...rest);
   };
 };
 // Функция удаления элемента

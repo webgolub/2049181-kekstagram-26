@@ -1,5 +1,4 @@
-const GET_DATA_URL = 'https://26.javascript.pages.academy/kekstagram/data';
-const SEND_DATA_URL = 'https://26.javascript.pages.academy/kekstagram';
+import { GET_DATA_URL, SEND_DATA_URL } from './const.js';
 
 const getData = async (onSuccess, onFail) => {
   try {

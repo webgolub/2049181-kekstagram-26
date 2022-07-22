@@ -38,8 +38,8 @@ const renderThumbnail = (photo) => {
   return thumbnail;
 };
 
-const deleteRenderedPictures = () => {
-  document.querySelectorAll('.picture').forEach(removeElement);
+const removePictures = () => {
+  picturesContainer.querySelectorAll('.picture').forEach(removeElement);
 };
 
 // Функция рендера миниатюр из объекта с данными
@@ -57,4 +57,4 @@ setBigPictureEscKeydownHandler (() => {
   hideBigPicture();
 });
 
-export { renderPictures, deleteRenderedPictures };
+export { renderPictures, removePictures };

@@ -1,8 +1,4 @@
-const ScaleValue = {
-  MIN: 25,
-  MAX: 100,
-  STEP: 25,
-};
+import { ScaleValue } from './const.js';
 
 // Поле вывода масштаба
 const scaleValueDisplay = document.querySelector('.scale__control--value');

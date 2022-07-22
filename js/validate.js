@@ -1,17 +1,15 @@
 import { checkTextLength, isArrayUnique } from './util.js';
-
-// Максимальная длинна комментария
-const COMMENT_MAX_LENGTH = 140;
-// Максимальное количество хэштегов
-const MAX_HASHTAG = 5;
-// Длина хэштега
-const HashtagLength = {
-  MIN: 2,
-  MAX: 20
-};
+import {
+  COMMENT_MAX_LENGTH,
+  MAX_HASHTAG,
+  FILE_TYPES,
+  HashtagLength
+} from './const.js';
 
 // Форма загрузки изображения на сайт
 const uploadForm = document.querySelector('.img-upload__form');
+// Поле загрузки изображения
+const uploadFileInput = uploadForm.querySelector('#upload-file');
 // Попап редактирования загружаемого изображения
 const imgUploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 // Поле ввода комментария
@@ -33,6 +31,13 @@ const pristine = new Pristine (uploadForm, {
 
 // Функция очистки от лишних пробелов, приведения к нижнему регистру и помещения в массив введённых хэштегов
 const parseHashtagsInput = (value) => value !== '' ? value.trim().toLowerCase().split(' ') : [];
+
+// Функция проверки соответствия разрешения файла перечню допустимых
+const checkFileTypeMatch = () => {
+  const file = uploadFileInput.files[0];
+  const fileName = file.name.toLowerCase();
+  return FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
+};
 
 // Проверки комментариев и хэштегов на валидность
 
@@ -56,4 +61,4 @@ pristine.addValidator(hashtagsInput, (value) => value === '' || parseHashtagsInp
 
 const validateUploadForm = () => pristine.validate();
 
-export { validateUploadForm };
+export { validateUploadForm, checkFileTypeMatch };
