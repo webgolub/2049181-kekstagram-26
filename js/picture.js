@@ -44,7 +44,6 @@ const removePictures = () => {
 
 // Функция рендера миниатюр из объекта с данными
 const renderPictures = (pictures) => {
-  console.log('render');
   picturesContainer.append(...pictures.map(renderThumbnail));
 };
 
