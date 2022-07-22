@@ -4,8 +4,8 @@ import { resetEffects } from './effects.js';
 import { validateUploadForm, checkFileTypeMatch } from './validate.js';
 import { sendData } from './api.js';
 import { showSuccessUploadModal, showFailUploadModal } from './window.js';
-import { TEXT_FIELD_NAMES } from './const.js';
 
+const TEXT_FIELD_NAMES = ['hashtags', 'description'];
 // Форма загрузки изображения на сайт
 const uploadForm = document.querySelector('.img-upload__form');
 // Поле загрузки изображения
@@ -61,15 +61,27 @@ function closeUploadOverlay () {
   document.body.classList.remove('modal-open');
 
   uploadForm.reset();
+  imgPreview.src ='';
   document.removeEventListener('keydown', imgUploadOverlayEscKeydownHandler);
   imgUploadOverlayCancellButton.removeEventListener('click', imgUploadOverlayCancelButtonClickHandler);
 }
+
+const renderPicturePreview = () => {
+  const file = uploadFileInput.files[0];
+  const isFileTypeValid = checkFileTypeMatch(file.name);
+
+  if (isFileTypeValid) {
+    imgPreview.src = URL.createObjectURL(file);
+  }
+};
 
 // Событие изменения поля загрузки изображения
 uploadFileInput.addEventListener('change', () => {
   imgUploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   resetUploadPicture();
+  renderPicturePreview();
+  validateUploadForm();
 
   document.addEventListener('keydown', imgUploadOverlayEscKeydownHandler);
   imgUploadOverlayCancellButton.addEventListener('click', imgUploadOverlayCancelButtonClickHandler);
@@ -87,36 +99,28 @@ const unblockSubmitButton = () => {
   imgUploadOverlaySubmitButton.textContent = 'Опубликовать';
 };
 
-// Обработчик события изменения формы
-uploadFileInput.addEventListener('change', () => {
-  const file = uploadFileInput.files[0];
-  const isFileTypeValid = checkFileTypeMatch();
-
-  if (isFileTypeValid) {
-    imgPreview.src = URL.createObjectURL(file);
-  }
-  // Убираю предупреждения от предыдущей валидации
-  validateUploadForm();
-});
+const resetUploadOverlay = () => {
+  uploadForm.reset();
+  resetUploadPicture();
+  URL.revokeObjectURL(imgPreview.src);
+  imgPreview.src ='';
+};
 
 // Обработчик действия при отправке формы
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-
+  const file = uploadFileInput.files[0];
   const isFormValid = validateUploadForm();
-  const isFileTypeValid = checkFileTypeMatch();
+  const isFileTypeValid = checkFileTypeMatch(file.name);
 
   if(isFormValid && isFileTypeValid ) {
     blockSubmitButton();
     sendData(() => {
       // OnSucsess
       unblockSubmitButton();
-      resetUploadPicture();
       closeUploadOverlay();
-      uploadForm.reset();
+      resetUploadOverlay();
       showSuccessUploadModal();
-      URL.revokeObjectURL(imgPreview.src);
-      imgPreview.src ='';
     },
     () => {
     // OnFail
@@ -126,7 +130,7 @@ uploadForm.addEventListener('submit', (evt) => {
     //body
     new FormData(uploadForm)
     );
-  }  else  if (isFormValid) {
+  }  else if (isFormValid) {
     showAlert('Выбран неверный тип файла. Закройте форму и выберите изображение для загрузки.');
   }
 });

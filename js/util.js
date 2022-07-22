@@ -1,9 +1,9 @@
 import {
-  ESCAPE_KEYS,
   ALERT_SHOW_TIME,
   DEBOUNCE_DEFAULT_TIMEOUT
 } from './const.js';
 
+const ESCAPE_KEYS = ['Escape', 'Esc'];
 // Функция для проверки строки на максимальную длину
 const checkTextLength = (text, maxLength) => text.length <= maxLength;
 // Проверка что нажатая клавиша - ESC

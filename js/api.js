@@ -1,8 +1,8 @@
-import { GET_DATA_URL, SEND_DATA_URL } from './const.js';
+import { GET, POST } from './const.js';
 
 const getData = async (onSuccess, onFail) => {
   try {
-    const response = await fetch(GET_DATA_URL);
+    const response = await fetch(GET);
     const data = await response.json();
     if (!response.ok) {
       onFail();
@@ -15,7 +15,7 @@ const getData = async (onSuccess, onFail) => {
 
 const sendData = async (onSuccess, onFail, body) => {
   try {
-    const response = await fetch(SEND_DATA_URL, {
+    const response = await fetch(POST, {
       method: 'POST',
       body,
     });
