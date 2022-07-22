@@ -4,7 +4,6 @@ import { renderPictures, removePictures } from './picture.js';
 import { showFilters, setFilterChangeHandler} from './filter.js';
 import { filterPictures } from './filter-pictures.js';
 import './form.js';
-import { FilterType } from './const.js';
 
 // Отрисовка миниатюр
 getData((pictures) => {
@@ -12,9 +11,6 @@ getData((pictures) => {
   renderPictures(pictures);
   setFilterChangeHandler(
     debounce((filterType) => {
-      if (FilterType === FilterType.DEFAULT){
-        return;
-      }
       removePictures();
       renderPictures(filterPictures(pictures, filterType));
     },

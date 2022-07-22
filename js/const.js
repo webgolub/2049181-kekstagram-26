@@ -1,5 +1,6 @@
 const GET_DATA_URL = 'https://26.javascript.pages.academy/kekstagram/data';
 const SEND_DATA_URL = 'https://26.javascript.pages.academy/kekstagram';
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const TEXT_FIELD_NAMES = ['hashtags', 'description'];
 const ESCAPE_KEYS = ['Escape', 'Esc'];
 const ALERT_SHOW_TIME = 5000;
@@ -44,6 +45,7 @@ export{
   DEBOUNCE_DEFAULT_TIMEOUT,
   COMMENT_MAX_LENGTH,
   MAX_HASHTAG,
+  FILE_TYPES,
   HashtagLength,
   Effect,
   FilterType,

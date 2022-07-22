@@ -1,7 +1,7 @@
-import { isEscKey } from './util.js';
+import { isEscKey, showAlert } from './util.js';
 import { resetScale, setScaleChangeHandler } from './scale.js';
 import { resetEffects } from './effects.js';
-import { validateUploadForm } from './validate.js';
+import { validateUploadForm, checkFileTypeMatch } from './validate.js';
 import { sendData } from './api.js';
 import { showSuccessUploadModal, showFailUploadModal } from './window.js';
 import { TEXT_FIELD_NAMES } from './const.js';
@@ -87,12 +87,26 @@ const unblockSubmitButton = () => {
   imgUploadOverlaySubmitButton.textContent = 'Опубликовать';
 };
 
+// Обработчик события изменения формы
+uploadFileInput.addEventListener('change', () => {
+  const file = uploadFileInput.files[0];
+  const isFileTypeValid = checkFileTypeMatch();
+
+  if (isFileTypeValid) {
+    imgPreview.src = URL.createObjectURL(file);
+  }
+  // Убираю предупреждения от предыдущей валидации
+  validateUploadForm();
+});
+
 // Обработчик действия при отправке формы
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
 
-  const isValid = validateUploadForm();
-  if(isValid) {
+  const isFormValid = validateUploadForm();
+  const isFileTypeValid = checkFileTypeMatch();
+
+  if(isFormValid && isFileTypeValid ) {
     blockSubmitButton();
     sendData(() => {
       // OnSucsess
@@ -101,6 +115,8 @@ uploadForm.addEventListener('submit', (evt) => {
       closeUploadOverlay();
       uploadForm.reset();
       showSuccessUploadModal();
+      URL.revokeObjectURL(imgPreview.src);
+      imgPreview.src ='';
     },
     () => {
     // OnFail
@@ -110,11 +126,9 @@ uploadForm.addEventListener('submit', (evt) => {
     //body
     new FormData(uploadForm)
     );
+  }  else  if (isFormValid) {
+    showAlert('Выбран неверный тип файла. Закройте форму и выберите изображение для загрузки.');
   }
 });
 
-/* Обработчик события изменения формы, чтобы при закрытии попапа
-   очищались предупреждения от старых проверок */
-uploadForm.addEventListener('change', () => {
-  validateUploadForm();
-});
+
