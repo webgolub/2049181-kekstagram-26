@@ -6,6 +6,7 @@ const DEBOUNCE_DEFAULT_TIMEOUT = 500;
 const COMMENT_MAX_LENGTH = 140;
 const RANDOM_PICTURES_COUNT = 10;
 const MAX_HASHTAG = 5;
+const COMMENTS_BLOCK_SIZE = 5;
 
 const FilterType = {
   DEFAULT: 'filter-default',
@@ -32,6 +33,7 @@ export{
   DEBOUNCE_DEFAULT_TIMEOUT,
   COMMENT_MAX_LENGTH,
   MAX_HASHTAG,
+  COMMENTS_BLOCK_SIZE,
   ALLOWED_FILE_TYPES,
   HashtagLength,
   FilterType,
