@@ -19,15 +19,8 @@ const imgUploadOverlayCancellButton = uploadForm.querySelector('#upload-cancel')
 // Кнопка отправки формы
 const imgUploadOverlaySubmitButton =  uploadForm.querySelector('.img-upload__submit');
 
-
-// Функция установки коллбэка для функции отрисовки изменения масштаба изображения
-setScaleChangeHandler((value) => {
-  imgPreview.style.transform = `scale(${value / 100 })`;
-});
-
 // Проверка что фокус не на текстовых полях
 const isNotTextFields = (evt) => ! TEXT_FIELD_NAMES.includes(evt.target.name);
-
 
 // Функция сброса превью загружаемого изображения
 const resetUploadPicture = () => {
@@ -82,18 +75,6 @@ const renderPicturePreview = () => {
   }
 };
 
-// Событие изменения поля загрузки изображения
-uploadFileInput.addEventListener('change', () => {
-  imgUploadOverlay.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-  resetUploadPicture();
-  renderPicturePreview();
-  validateUploadForm();
-
-  document.addEventListener('keydown', imgUploadOverlayEscKeydownHandler);
-  imgUploadOverlayCancellButton.addEventListener('click', imgUploadOverlayCancelButtonClickHandler);
-});
-
 // Функция блокирования кнопки отправки формы
 const blockSubmitButton = () => {
   imgUploadOverlaySubmitButton.disabled = true;
@@ -106,7 +87,12 @@ const unblockSubmitButton = () => {
   imgUploadOverlaySubmitButton.textContent = 'Опубликовать';
 };
 
-// Обработчик действия при отправке формы
+// Установка коллбэка для функции отрисовки изменения масштаба изображения
+setScaleChangeHandler((value) => {
+  imgPreview.style.transform = `scale(${value / 100 })`;
+});
+
+// Событие действия при отправке формы
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
 
@@ -138,4 +124,14 @@ uploadForm.addEventListener('submit', (evt) => {
 
 });
 
+// Событие изменения поля загрузки изображения
+uploadFileInput.addEventListener('change', () => {
+  imgUploadOverlay.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  resetUploadPicture();
+  renderPicturePreview();
+  validateUploadForm();
 
+  document.addEventListener('keydown', imgUploadOverlayEscKeydownHandler);
+  imgUploadOverlayCancellButton.addEventListener('click', imgUploadOverlayCancelButtonClickHandler);
+});
