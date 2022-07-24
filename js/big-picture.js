@@ -105,7 +105,7 @@ const renderModalWindow = ({url, likes, comments, description}) => {
   modalBigPicture.src = url;
   modalLikesCount.textContent = likes;
   modalSocialCaption.textContent = description;
-  modalCommentsContainer.textContent = '';
+  modalCommentsContainer.innerHTML = '';
   showComments(comments);
   updateCommentsCount();
   handleCommentsLoaderButton();
