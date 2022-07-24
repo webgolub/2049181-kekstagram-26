@@ -1,10 +1,7 @@
 import { RANDOM_PICTURES_COUNT, FilterType } from './const.js';
 
-const filterPictures = (pictures, filterType = FilterType.DEFAULT) => {
+const filterPictures = (pictures, filterType) => {
   switch (filterType){
-    case FilterType.DEFAULT:
-      return pictures.slice();
-
     case FilterType.RANDOM:
       return pictures.slice().sort(() => 0.5 - Math.random()).slice(0, RANDOM_PICTURES_COUNT);
 
@@ -13,6 +10,7 @@ const filterPictures = (pictures, filterType = FilterType.DEFAULT) => {
         pictureB.comments.length - pictureA.comments.length
       );
   }
+  return pictures.slice();
 };
 
 export { filterPictures };

@@ -1,21 +1,14 @@
-const GET_DATA_URL = 'https://26.javascript.pages.academy/kekstagram/data';
-const SEND_DATA_URL = 'https://26.javascript.pages.academy/kekstagram';
-const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-const TEXT_FIELD_NAMES = ['hashtags', 'description'];
-const ESCAPE_KEYS = ['Escape', 'Esc'];
+const ALLOWED_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const ALERT_SHOW_TIME = 5000;
 const DEBOUNCE_DEFAULT_TIMEOUT = 500;
 const COMMENT_MAX_LENGTH = 140;
 const RANDOM_PICTURES_COUNT = 10;
 const MAX_HASHTAG = 5;
+const COMMENTS_BLOCK_SIZE = 5;
 
-const Effect = {
-  NONE: 'none',
-  CHROME: 'chrome',
-  SEPIA: 'sepia',
-  MARVIN: 'marvin',
-  PHOBOS: 'phobos',
-  HEAT: 'heat',
+const RequestUrl ={
+  GET: 'https://26.javascript.pages.academy/kekstagram/data',
+  POST: 'https://26.javascript.pages.academy/kekstagram',
 };
 
 const FilterType = {
@@ -36,18 +29,15 @@ const HashtagLength = {
 };
 
 export{
-  GET_DATA_URL,
-  SEND_DATA_URL,
   RANDOM_PICTURES_COUNT,
-  TEXT_FIELD_NAMES,
-  ESCAPE_KEYS,
   ALERT_SHOW_TIME,
   DEBOUNCE_DEFAULT_TIMEOUT,
   COMMENT_MAX_LENGTH,
   MAX_HASHTAG,
-  FILE_TYPES,
+  COMMENTS_BLOCK_SIZE,
+  ALLOWED_FILE_TYPES,
+  RequestUrl,
   HashtagLength,
-  Effect,
   FilterType,
   ScaleValue,
 };

@@ -1,13 +1,14 @@
-import { GET_DATA_URL, SEND_DATA_URL } from './const.js';
+import { RequestUrl } from './const.js';
 
 const getData = async (onSuccess, onFail) => {
   try {
-    const response = await fetch(GET_DATA_URL);
-    const data = await response.json();
+    const response = await fetch(RequestUrl.GET);
     if (!response.ok) {
       onFail();
+    } else {
+      const data = await response.json();
+      onSuccess(data);
     }
-    onSuccess(data);
   } catch (err) {
     onFail();
   }
@@ -15,14 +16,15 @@ const getData = async (onSuccess, onFail) => {
 
 const sendData = async (onSuccess, onFail, body) => {
   try {
-    const response = await fetch(SEND_DATA_URL, {
+    const response = await fetch(RequestUrl.POST, {
       method: 'POST',
       body,
     });
     if (!response.ok) {
       onFail();
+    } else {
+      onSuccess();
     }
-    onSuccess();
   } catch (err) {
     onFail();
   }

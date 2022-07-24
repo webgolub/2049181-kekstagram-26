@@ -1,4 +1,11 @@
-import { Effect } from './const.js';
+const Effect = {
+  NONE: 'none',
+  CHROME: 'chrome',
+  SEPIA: 'sepia',
+  MARVIN: 'marvin',
+  PHOBOS: 'phobos',
+  HEAT: 'heat',
+};
 
 // Форма загрузки изображения на сайт
 const uploadForm = document.querySelector('.img-upload__form');
