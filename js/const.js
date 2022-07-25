@@ -21,7 +21,7 @@ const ValidateMessage = {
 };
 
 const RequestUrl ={
-  GET: 'https://26.javascript.pages.academ/kekstagram/data',
+  GET: 'https://26.javascript.pages.academy/kekstagram/data',
   POST: 'https://26.javascript.pages.academy/kekstagram',
 };
 
