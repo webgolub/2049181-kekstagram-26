@@ -3,6 +3,7 @@ import { debounce, showAlert } from './util.js';
 import { renderPictures, removePictures } from './picture.js';
 import { showFilters, setFilterChangeHandler} from './filter.js';
 import { filterPictures } from './filter-pictures.js';
+import { AlertMessage } from './const.js';
 import './form.js';
 
 // Отрисовка миниатюр
@@ -18,5 +19,5 @@ getData((pictures) => {
   );
 },
 () => {
-  showAlert('Данные с сервера не получены. Попробуйте обновить страницу');
+  showAlert(AlertMessage.GET_DATA_ERROR);
 });

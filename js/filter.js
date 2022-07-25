@@ -15,7 +15,7 @@ const filterButtonClickHandler = (evt) => {
     currentButton.classList.add('img-filters__button--active');
   }
 
-  if (typeof filterChangeCallback === 'function') {
+  if (filterChangeCallback !== null) {
     filterChangeCallback(currentButton.id);
   }
 };

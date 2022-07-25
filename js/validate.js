@@ -3,7 +3,8 @@ import {
   COMMENT_MAX_LENGTH,
   MAX_HASHTAG,
   ALLOWED_FILE_TYPES,
-  HashtagLength
+  HashtagLength,
+  ValidateMessage,
 } from './const.js';
 
 // Форма загрузки изображения на сайт
@@ -39,22 +40,22 @@ const checkFileTypeMatch = (fileName) => {
 // Проверки комментариев и хэштегов на валидность
 
 pristine.addValidator(commentInput, (value) => checkTextLength(value, COMMENT_MAX_LENGTH),
-  'Комментарий не должен быть длиннее 140 символов');
+  ValidateMessage.COMMENT_TOO_LONG, 1, true);
 
 pristine.addValidator(hashtagsInput, (value) => parseHashtagsInput(value).length <= MAX_HASHTAG,
-  'Не больше 5 хэштегов');
+  ValidateMessage.HASHTAG_TOO_MUCH, 1, true);
 
 pristine.addValidator(hashtagsInput, (value) => value === '' || parseHashtagsInput(value).every((hashtag) => hashtagEndingRegExp.test(hashtag)),
-  'Хэштеги разделяются пробелом');
+  ValidateMessage.HASHTAG_WRONG_SEPARATOR, 1, true);
 
 pristine.addValidator(hashtagsInput, (value) => isArrayUnique(parseHashtagsInput(value)),
-  'Хэштеги не должны повторяться');
+  ValidateMessage.HASHTAG_NO_REPEAT, 1, true);
 
 pristine.addValidator(hashtagsInput, (value) => value === '' || parseHashtagsInput(value).every((hashtag) => hashtagRegExp.test(hashtag)),
-  'Хэштег начинается с # и состоит только из букв и цифр');
+  ValidateMessage.HASHTAG_WRONG_CONTENT, 1, true);
 
 pristine.addValidator(hashtagsInput, (value) => value === '' || parseHashtagsInput(value).every((hashtag) => hashtag.length >= HashtagLength.MIN && hashtag.length <= HashtagLength.MAX),
-  'Длина хэштега — от 1 до 19 символов после #');
+  ValidateMessage.HASHTAG_TOO_LONG, 1, true);
 
 const validateUploadForm = () => pristine.validate();
 
