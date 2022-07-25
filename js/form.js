@@ -4,6 +4,7 @@ import { resetEffects } from './effects.js';
 import { validateUploadForm, checkFileTypeMatch } from './validate.js';
 import { sendData } from './api.js';
 import { showSuccessUploadModal, showFailUploadModal } from './window.js';
+import { AlertMessage, SubmitButtonText } from './const.js';
 
 const TEXT_FIELD_NAMES = ['hashtags', 'description'];
 // Форма загрузки изображения на сайт
@@ -75,16 +76,9 @@ const renderPicturePreview = () => {
   }
 };
 
-// Функция блокирования кнопки отправки формы
-const blockSubmitButton = () => {
-  imgUploadOverlaySubmitButton.disabled = true;
-  imgUploadOverlaySubmitButton.textContent = 'Публикую...';
-};
-
-// Функция разблокирования кнопки отправки формы
-const unblockSubmitButton = () => {
-  imgUploadOverlaySubmitButton.disabled = false;
-  imgUploadOverlaySubmitButton.textContent = 'Опубликовать';
+const handleSubmitButton = (disabledFlag, buttonText) => {
+  imgUploadOverlaySubmitButton.disabled = disabledFlag;
+  imgUploadOverlaySubmitButton.textContent = buttonText;
 };
 
 // Установка коллбэка для функции отрисовки изменения масштаба изображения
@@ -97,7 +91,7 @@ uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
 
   if (! checkFileTypeMatch(uploadFileInput.files[0].name)) {
-    showAlert('Выбран неверный тип файла. Закройте форму и выберите изображение для загрузки.');
+    showAlert(AlertMessage.WRONG_FILE_TYPE);
     return;
   }
 
@@ -105,17 +99,17 @@ uploadForm.addEventListener('submit', (evt) => {
     return;
   }
 
-  blockSubmitButton();
+  handleSubmitButton(true, SubmitButtonText.BLOCKED);
 
   sendData(() => {
     // OnSucsess
-    unblockSubmitButton();
+    handleSubmitButton(false, SubmitButtonText.UNBLOCKED);
     closeUploadOverlay();
     showSuccessUploadModal();
   },
   () => {
     // OnFail
-    unblockSubmitButton();
+    handleSubmitButton(false, SubmitButtonText.UNBLOCKED);
     showFailUploadModal();
   },
   //body
